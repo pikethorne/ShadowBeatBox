@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// The TestDummy class is primarily for playtesting purposes.
@@ -9,7 +6,8 @@ using UnityEngine;
 /// Plays an audio cue and visual remarking if it was a good hit or a bad hit.
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
-public class TestDummy : MonoBehaviour {
+public class TestDummy : MonoBehaviour
+{
 	#region Fields
 	[SerializeField] private float velocityRequirement = 1f;
 	[SerializeField] private AudioClip[] punches;
@@ -27,26 +25,57 @@ public class TestDummy : MonoBehaviour {
 	private AudioSource audioSource;
 	#endregion
 
-	#region Methods
-	//Default unity method
-	private void Awake(){
-		audioSource = GetComponent<AudioSource>();
+	/// <summary>
+	/// Returns the reference to the audio source.
+	/// </summary>
+	public AudioSource Audio
+	{
+		get
+		{
+			//Returns the reference to the audio source if it exists
+			if (audioSource)
+			{
+				return audioSource;
+			}
+			//If there isn't a reference to the audio source but it exists, creates it and returns it.
+			else if (!audioSource && GetComponent<AudioSource>())
+			{
+				return audioSource = GetComponent<AudioSource>();
+			}
+			//If there isn't an audio source at all it creates one. This is just a fallback and should not be used.
+			else
+			{
+				Debug.LogWarning(gameObject.name + " doesn't have an audio source! Generating one with default settings. To prevent this add an audio source when the game is not running.");
+				return audioSource = gameObject.AddComponent<AudioSource>();
+			}
+		}
+		set
+		{
+			audioSource = value;
+		}
 	}
 
+	#region Methods
 	//Default unity method
-	private void OnTriggerEnter(Collider other){
+	private void OnTriggerEnter(Collider other)
+	{
 		Debug.Log(other.name + " trigger hit me with " + other.gameObject.GetComponent<Glove>().Velocity);
 		PlayRandomAudio(punches);
 		if (other.gameObject.GetComponent<Glove>().Velocity > velocityRequirement)
+		{
 			SuccessfulHit();
+		}
 		else
+		{
 			FailedHit();
+		}
 	}
 
 	/// <summary>
 	/// Triggered when a hit did not exceed the required velocity
 	/// </summary>
-	private void FailedHit(){
+	private void FailedHit()
+	{
 		Instantiate(badText, textSpawner.transform.position, textSpawner.transform.rotation);
 		AttemptFailLine();
 	}
@@ -54,8 +83,10 @@ public class TestDummy : MonoBehaviour {
 	/// <summary>
 	/// Attempts to trigger a voice line asserting a bad hit.
 	/// </summary>
-	private void AttemptFailLine(){
-		if (Time.time > waitUntil){
+	private void AttemptFailLine()
+	{
+		if (Time.time > waitUntil)
+		{
 			PlayRandomAudio(hitFailures);
 			waitUntil = Time.time + talkingDelay;
 		}
@@ -64,7 +95,8 @@ public class TestDummy : MonoBehaviour {
 	/// <summary>
 	/// Triggered when a hit exceeds the required velocity.
 	/// </summary>
-	private void SuccessfulHit(){
+	private void SuccessfulHit()
+	{
 		Instantiate(goodText, textSpawner.transform.position, textSpawner.transform.rotation);
 		PlayRandomAudio(hits);
 		AttemptSuccessLine();
@@ -73,8 +105,10 @@ public class TestDummy : MonoBehaviour {
 	/// <summary>
 	/// Attempts to trigger a voice line asserting a good hit.
 	/// </summary>
-	private void AttemptSuccessLine(){
-		if (Time.time > waitUntil){
+	private void AttemptSuccessLine()
+	{
+		if (Time.time > waitUntil)
+		{
 			PlayRandomAudio(hitAffirmation);
 			waitUntil = Time.time + talkingDelay;
 		}
@@ -84,8 +118,9 @@ public class TestDummy : MonoBehaviour {
 	/// Plays a random audio from the array of sound files.
 	/// </summary>
 	/// <param name="clips">The array of sound files to trigger from</param>
-	private void PlayRandomAudio(AudioClip[] clips){
-		audioSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
+	private void PlayRandomAudio(AudioClip[] clips)
+	{
+		Audio.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
 	}
 	#endregion
 }
