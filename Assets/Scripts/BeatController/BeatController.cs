@@ -5,12 +5,6 @@ using UnityEngine;
 public class BeatController : MonoBehaviour {
 
     AudioSource song;
-
-    public GameObject nome1;
-    public GameObject nome2;
-    public GameObject nome3;
-    public GameObject nome4;
-    public GameObject nomeAct;
     public float BPM;
     
     List<BeatObject> beatList = new List<BeatObject>();
@@ -24,7 +18,7 @@ public class BeatController : MonoBehaviour {
         public float Denominator;
         public float MeasuresToWait;
 
-        public BeatObject(GameObject g, float beatNumerator, float beatDenominator, float measuresToWait = 0)
+        public BeatObject(float beatNumerator, float beatDenominator, float measuresToWait = 0, GameObject g = null)
         {
             ObjectPassed = g;
             Numerator = beatNumerator;
@@ -46,14 +40,14 @@ public class BeatController : MonoBehaviour {
     /// </summary>
     public void StartSong()
     {
-        BeatObject beat1 = new BeatObject(nome1, 1, 8);
-        BeatObject beat2 = new BeatObject(nome2, 2, 8);
-        BeatObject beat3 = new BeatObject(nome3, 3, 8);
-        BeatObject beat4 = new BeatObject(nome4, 4, 8);
-        BeatObject beat5 = new BeatObject(nome4, 5, 8);
-        BeatObject beat6 = new BeatObject(nome4, 6, 8);
-        BeatObject beat7 = new BeatObject(nome4, 7, 8);
-        BeatObject beat8 = new BeatObject(nome4, 8, 8);
+        BeatObject beat1 = new BeatObject(1, 8);
+        BeatObject beat2 = new BeatObject(2, 8);
+        BeatObject beat3 = new BeatObject(3, 8);
+        BeatObject beat4 = new BeatObject(4, 8);
+        BeatObject beat5 = new BeatObject(5, 8);
+        BeatObject beat6 = new BeatObject(6, 8);
+        BeatObject beat7 = new BeatObject(7, 8);
+        BeatObject beat8 = new BeatObject(8, 8);
         beatList.Add(beat1);
         beatList.Add(beat2);
         beatList.Add(beat3);
@@ -73,19 +67,19 @@ public class BeatController : MonoBehaviour {
     void RunBeatList()
     {
         foreach(BeatObject b in beatList){
-            StartCoroutine(QueueBeat(b.ObjectPassed, b.Numerator, b.Denominator, b.MeasuresToWait));
+            StartCoroutine(QueueBeat(b.Numerator, b.Denominator, b.MeasuresToWait, b.ObjectPassed));
         }
     }
-    
+
     /// <summary>
     /// Coroutine that loops a specific amount of time depending on the Beat specified.
     /// </summary>
-    /// <param name="g">Game Object if Necessary</param>
     /// <param name="beatNumerator"></param>
     /// <param name="beatDenominator"></param>
-    /// <param name="measuresToWait">For Specific Beats To Happen Once</param>
+    /// <param name="measuresToWait"></param>
+    /// <param name="g">Object Reference if Necessary</param>
     /// <returns></returns>
-    IEnumerator QueueBeat(GameObject g, float beatNumerator, float beatDenominator, float measuresToWait = 0)
+    IEnumerator QueueBeat(float beatNumerator, float beatDenominator, float measuresToWait = 0, GameObject g = null)
     {
         // Math Stuff to determine the time to do beat things
         float timeInMeasure = ((240f / BPM) / beatDenominator) * beatNumerator;
