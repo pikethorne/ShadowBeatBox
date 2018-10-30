@@ -5,8 +5,7 @@
 /// It checks for a trigger entry and will assert if it was a good hit or not.
 /// Plays an audio cue and visual remarking if it was a good hit or a bad hit.
 /// </summary>
-[RequireComponent(typeof(AudioSource))]
-public class TestDummy : MonoBehaviour
+public class TestDummy : EnemyUnit
 {
 	#region Fields
 	[SerializeField] private float velocityRequirement = 1f;
@@ -122,5 +121,47 @@ public class TestDummy : MonoBehaviour
 	{
 		Audio.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
 	}
+
+	/// <summary>
+	/// Requests the enemy to do a punch. Will only execute if conditions are met.
+	/// </summary>
+	public override void AttemptPunch()
+	{
+
+	}
+
+	/// <summary>
+	/// Requests the enemy to windup AND then punch. Will only execute if conditions are met.
+	/// </summary>
+	public override void AttemptWindupPunch()
+	{
+
+	}
+
+	/// <summary>
+	/// Requests the unit to only windup and not punch after. Will only execute if conditions are met.
+	/// </summary>
+	public override void AttemptWindupExclusive()
+	{
+
+	}
+
+	/// <summary>
+	/// Requests the unit to have no action. Will play an idle animation.
+	/// </summary>
+	public override void AttemptIdle()
+	{
+
+	}
+
+	/// <summary>
+	/// Requests the unit to have no action. Will appear exhausted for a period of time and then play standard idle animation.
+	/// </summary>
+	/// <param name="exhaustTime">Amount of time the unit should appear exhausted. Should be within tempo.</param>
+	public override void AttemptIdle(float exhaustTime)
+	{
+
+	}
+
 	#endregion
 }
