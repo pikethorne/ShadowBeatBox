@@ -34,8 +34,8 @@ public class PunchState : State<SimpleAI>
     {
         Debug.Log("Entering Punch State");
 
-        TestDummy punchInstance = new TestDummy();
-        punchInstance.AttemptPunch();
+        //TestDummy punchInstance = new TestDummy();
+        //punchInstance.AttemptPunch();
     }
 
     public override void ExitState(SimpleAI _owner)

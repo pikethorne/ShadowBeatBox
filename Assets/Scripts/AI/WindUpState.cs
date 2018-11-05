@@ -34,10 +34,9 @@ public class WindUpState : State<SimpleAI>
     {
         Debug.Log("Entering WindUp State");
 
-        TestDummy windUpInstance = new TestDummy();
-        windUpInstance.AttemptWindupExclusive();
 
-        FacePlayer facePlayerInstance = new FacePlayer();
+        //EnemyUnit enemyUnit = (EnemyUnit)GameObject.FindObjectOfType(typeof(EnemyUnit));
+        //enemyUnit.AttemptWindupExclusive();
     }
 
     public override void ExitState(SimpleAI _owner)
