@@ -33,18 +33,21 @@ public class PunchState : State<SimpleAI>
     public override void EnterState(SimpleAI _owner)
     {
         Debug.Log("Entering Punch State");
+
+        TestDummy punchInstance = new TestDummy();
+        punchInstance.AttemptPunch();
     }
 
     public override void ExitState(SimpleAI _owner)
     {
-        Debug.Log("Exiting Punch State");
+        //Debug.Log("Exiting Punch State");
     }
 
     public override void UpdateState(SimpleAI _owner)
     {
         if (_owner.switchState)
         {
-            _owner.stateController.ChangeState(MoveState.Instance);
+            _owner.stateController.ChangeState(IdleState.Instance);
         }
     }
 }

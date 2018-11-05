@@ -127,7 +127,7 @@ public class TestDummy : EnemyUnit
 	/// </summary>
 	public override void AttemptPunch()
 	{
-
+        Debug.Log("Attempt Punch");
 	}
 
 	/// <summary>
@@ -135,7 +135,7 @@ public class TestDummy : EnemyUnit
 	/// </summary>
 	public override void AttemptWindupPunch()
 	{
-
+        Debug.Log("Attempt Wind Up with Punch");
 	}
 
 	/// <summary>
@@ -143,7 +143,11 @@ public class TestDummy : EnemyUnit
 	/// </summary>
 	public override void AttemptWindupExclusive()
 	{
+        Debug.Log("Attempt Wind Up Only");
 
+        FacePlayer windUpInstance = new FacePlayer();
+
+        windUpInstance.FacePlayerCamera();
 	}
 
 	/// <summary>
@@ -151,7 +155,7 @@ public class TestDummy : EnemyUnit
 	/// </summary>
 	public override void AttemptIdle()
 	{
-
+        Debug.Log("Attempt Idle");
 	}
 
 	/// <summary>

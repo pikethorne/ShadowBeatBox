@@ -1,0 +1,26 @@
+<MoveList>
+	<Move>
+		Punch
+	</Move>
+	<Move>
+		Punch
+	</Move>
+	<Move>
+		Idle
+	</Move>
+	<Move>
+		Idle
+	</Move>
+	<Move>
+		WindUp
+	</Move>
+	<Move>
+		Windup
+	</Move>
+	<Move>
+		Punch
+	</Move>
+	<Move>
+		Idle
+	</Move>
+</MoveList>

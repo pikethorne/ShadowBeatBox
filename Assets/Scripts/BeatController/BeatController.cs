@@ -94,8 +94,8 @@ public class BeatController : MonoBehaviour {
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-            
 
+            Global.switchStateFlipper = true;
 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             if (measuresToWait != 0)

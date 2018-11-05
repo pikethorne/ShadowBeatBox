@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using StateStuff;
 
-public class SimpleAI : Timer
+public class SimpleAI : MonoBehaviour
 {
     public bool switchState = false;
 
@@ -12,17 +12,28 @@ public class SimpleAI : Timer
     private void Start()
     {
         stateController = new StateController<SimpleAI>(this);
-        stateController.ChangeState(MoveState.Instance);
-        InvokeRepeating("StateSwitch", 0.0f, Random.Range(1, 5) * noMusicTimer);
+        stateController.ChangeState(IdleState.Instance);
     }
 
     private void Update()
     {
-        stateController.Update();
+        
+
+        if (Global.switchStateFlipper == true)
+        {
+            StateSwitch();
+            stateController.Update();
+            Global.switchStateFlipper = false;
+        }
     }
 
     void StateSwitch()
     {
         switchState = !switchState;
     }
+}
+
+public class Global
+{
+    public static bool switchStateFlipper = false;
 }
