@@ -145,9 +145,9 @@ public class TestDummy : EnemyUnit
 	{
         Debug.Log("Attempt Wind Up Only");
 
-        FacePlayer windUpInstance = new FacePlayer();
+        //FacePlayer windUpInstance = new FacePlayer();
 
-        windUpInstance.FacePlayerCamera();
+        //windUpInstance.FacePlayerCamera();
 	}
 
 	/// <summary>
