@@ -17,8 +17,6 @@ public class SimpleAI : MonoBehaviour
 
     private void Update()
     {
-        
-
         if (Global.switchStateFlipper == true)
         {
             StateSwitch();
@@ -31,6 +29,7 @@ public class SimpleAI : MonoBehaviour
     {
         switchState = !switchState;
     }
+
 }
 
 public class Global

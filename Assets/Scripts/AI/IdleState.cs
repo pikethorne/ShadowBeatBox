@@ -33,9 +33,6 @@ public class IdleState : State<SimpleAI>
     public override void EnterState(SimpleAI _owner)
     {
         Debug.Log("Entering Idle State");
-
-        //TestDummy idleInstance = new TestDummy();
-        //idleInstance.AttemptIdle();
     }
 
     public override void ExitState(SimpleAI _owner)

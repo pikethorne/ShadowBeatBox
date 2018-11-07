@@ -6,7 +6,8 @@ using StateStuff;
 public class WindUpState : State<SimpleAI>
 {
     private static WindUpState instance;
-
+    private EnemyUnit WindUp;
+    
     private WindUpState()
     {
         if (instance != null)
@@ -15,6 +16,11 @@ public class WindUpState : State<SimpleAI>
         }
 
         instance = this;
+    }
+
+    void Start()
+    {
+        //WindUp = gameObject.GetComponent<EnemyUnit>();
     }
 
     public static WindUpState Instance
@@ -33,10 +39,8 @@ public class WindUpState : State<SimpleAI>
     public override void EnterState(SimpleAI _owner)
     {
         Debug.Log("Entering WindUp State");
-
-
-        //EnemyUnit enemyUnit = (EnemyUnit)GameObject.FindObjectOfType(typeof(EnemyUnit));
-        //enemyUnit.AttemptWindupExclusive();
+        //WindUp.WindUp();
+        
     }
 
     public override void ExitState(SimpleAI _owner)
