@@ -125,33 +125,33 @@ public class TestDummy : EnemyUnit
 	/// <summary>
 	/// Requests the enemy to do a punch. Will only execute if conditions are met.
 	/// </summary>
-	public override void AttemptPunch()
+	public override void RightPunch()
 	{
-
+        Debug.Log("Right Punch!");
 	}
 
 	/// <summary>
 	/// Requests the enemy to windup AND then punch. Will only execute if conditions are met.
 	/// </summary>
-	public override void AttemptWindupPunch()
+	public override void LeftPunch()
 	{
-
+        Debug.Log("Left Punch!");
 	}
 
 	/// <summary>
 	/// Requests the unit to only windup and not punch after. Will only execute if conditions are met.
 	/// </summary>
-	public override void AttemptWindupExclusive()
+	public override void WindUp()
 	{
-
+        Debug.Log("Windup!");
 	}
 
 	/// <summary>
 	/// Requests the unit to have no action. Will play an idle animation.
 	/// </summary>
-	public override void AttemptIdle()
+	public override void Idle()
 	{
-
+        Debug.Log("Idle!");
 	}
 
 	/// <summary>

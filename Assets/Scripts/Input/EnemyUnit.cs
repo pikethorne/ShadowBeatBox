@@ -4,26 +4,26 @@
 public abstract class EnemyUnit : MonoBehaviour
 {
 	/// <summary>
-	/// Requests the enemy to do a punch. Will only execute if conditions are met.
+	/// Requests the enemy to do a right punch.
 	/// </summary>
-	public abstract void AttemptPunch();
+	public abstract void RightPunch();
 
 	/// <summary>
-	/// Requests the enemy to windup AND then punch. Will only execute if conditions are met.
+	/// Requests the enemy to do a left punch.
 	/// </summary>
-	public abstract void AttemptWindupPunch();
+	public abstract void LeftPunch();
 
 
 	/// <summary>
-	/// Requests the unit to only windup and not punch after. Will only execute if conditions are met.
+	/// Requests the unit to windup.
 	/// </summary>
-	public abstract void AttemptWindupExclusive();
+	public abstract void WindUp();
 
 
 	/// <summary>
 	/// Requests the unit to have no action. Will play an idle animation.
 	/// </summary>
-	public abstract void AttemptIdle();
+	public abstract void Idle();
 
 	/// <summary>
 	/// Requests the unit to have no action. Will appear exhausted for a period of time and then play standard idle animation.
