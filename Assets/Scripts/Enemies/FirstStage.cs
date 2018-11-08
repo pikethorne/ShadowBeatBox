@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class FirstStage : EnemyUnit {
 
-    private void Start()
-    {
-        WindUp();
-    }
     /// <summary>
     /// Requests the enemy to do a punch. Will only execute if conditions are met.
     /// </summary>

@@ -15,24 +15,24 @@ public class SimpleAI : MonoBehaviour
         stateController.ChangeState(IdleState.Instance);
     }
 
-    private void Update()
-    {
-        if (Global.switchStateFlipper == true)
-        {
-            StateSwitch();
-            stateController.Update();
-            Global.switchStateFlipper = false;
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Global.switchStateFlipper == true)
+    //    {
+    //        StateSwitch();
+    //        stateController.Update();
+    //        Global.switchStateFlipper = false;
+    //    }
+    //}
 
-    void StateSwitch()
-    {
-        switchState = !switchState;
-    }
+    //void StateSwitch()
+    //{
+    //    switchState = !switchState;
+    //}
 
 }
 
-public class Global
-{
-    public static bool switchStateFlipper = false;
-}
+//public class Global
+//{
+//    public static bool switchStateFlipper = false;
+//}
