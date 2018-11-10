@@ -11,9 +11,11 @@ public class SimplestAI : MonoBehaviour
 
     private State _state;
     private EnemyUnit MoveSet;
+    MoveLoader parsedList;
+
     public bool updateState = false;
     public int stateDuration = 0;
-    MoveLoader parsedList;
+
 
     /// <summary>
     /// State declarations
@@ -34,41 +36,19 @@ public class SimplestAI : MonoBehaviour
     {
         MoveSet = GetComponent<EnemyUnit>();
         parsedList = GetComponent<MoveLoader>();
+        _state = State.UpdateState;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Global.switchStateBPM == true)
+        if (Global.switchStateBPM == true && stateDuration == 0)
         {
             UpdateStateSwitch(stateDuration);
-            // toggles bpm switch off
             Global.switchStateBPM = false;
-        }
-    }
-
-    /// <summary>
-    /// Enemy Action state machine
-    /// </summary>
-    private void EnemyActions()
-    {
-        switch (_state)
+        } else if (Global.switchStateBPM == true)
         {
-            case State.RightPunch:
-                RightPunchFunc();
-                break;
-            case State.LeftPunch:
-                LeftPunchFunc();
-                break;
-            case State.WindUp:
-                WindUpFunc();
-                break;
-            case State.Idle:
-                IdleFunc();
-                break;
-            case State.UpdateState:
-                UpdateState();
-                break;
+            stateDuration -= 1;
         }
     }
 
@@ -77,20 +57,21 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void UpdateStateSwitch(int duration)
     {
-        if (duration == Global.counterBPM)
-        {
-            _state = State.UpdateState;
-            Global.counterBPM = 0;
-            updateState = true;
-            UpdateState();
-        }
-        else if(duration == 0)
-        {
-            _state = State.UpdateState;
-            Global.counterBPM = 0;
-            updateState = true;
-            UpdateState();
-        }
+        //if (duration == Global.counterBPM)
+        //{
+        //    Global.counterBPM = 0;
+        //    updateState = true;
+        //    UpdateState();
+        //}
+        //else if(duration == 0)
+        //{
+        //    Global.counterBPM = 0;
+        //    updateState = true;
+        //    UpdateState();
+        //}
+        Global.counterBPM = 0;
+        updateState = true;
+        UpdateState();
     }
 
     /// <summary>
@@ -99,7 +80,6 @@ public class SimplestAI : MonoBehaviour
     private void UpdateState()
     {
         string newState;
-        //int newStateDuration = 0;
         int randomMoveList = Random.Range(0, parsedList.parsedMoves.Count / 4);
         Debug.Log("Update State");
 
@@ -131,13 +111,38 @@ public class SimplestAI : MonoBehaviour
                     updateState = false;
                     break;
             }
-            while (updateState == false)
-            {
-                UpdateStateSwitch(stateDuration);
-            }
+            //while (updateState == false)
+            //{
+            //    UpdateStateSwitch(stateDuration);
+            //}
         }
-        UpdateState();
+        //UpdateState();
 
+    }
+
+    /// <summary>
+    /// Enemy Action state machine
+    /// </summary>
+    private void EnemyActions()
+    {
+        switch (_state)
+        {
+            case State.RightPunch:
+                RightPunchFunc();
+                break;
+            case State.LeftPunch:
+                LeftPunchFunc();
+                break;
+            case State.WindUp:
+                WindUpFunc();
+                break;
+            case State.Idle:
+                IdleFunc();
+                break;
+            case State.UpdateState:
+                UpdateState();
+                break;
+        }
     }
 
     private void RightPunchFunc()
