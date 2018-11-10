@@ -691,6 +691,43 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1378735371090770, guid: c5f4e6693e7fcfe428e53743743f7f95,
     type: 2}
   m_PrefabInternal: {fileID: 544968907}
+--- !u!114 &1536569101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1536569100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b4dc5e79480c58489bfd6c9f50c0042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parsedDuration: []
+  parsedMoves: []
+--- !u!114 &1536569102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1536569100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44b4dbb4ed42d364fa15b034f3bb0c7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BPM: 120
+--- !u!114 &1536569103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1536569100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 939f767f0aea29547b7c3d053b35ace2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  randomMoveList: 0
 --- !u!82 &1536569105
 AudioSource:
   m_ObjectHideFlags: 0

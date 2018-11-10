@@ -16,6 +16,7 @@ public class SimplestAI : MonoBehaviour
     public const string path = "MoveDatabase";
 
     int stateDuration = 0;
+    int lastBeatCounter;
 
     int activeMoveIndex = 4;
 
@@ -30,22 +31,23 @@ public class SimplestAI : MonoBehaviour
         parsedList = GetComponent<MoveLoader>();
         anim = GetComponent<Animator>();
         mc = MoveContainer.Load(path);
+        lastBeatCounter = Global.counterBPM;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Global.switchStateBPM == true && stateDuration <= 0)
+        if (Global.counterBPM != lastBeatCounter && stateDuration <= 0)
         {
             UpdateState();
             
-            Global.switchStateBPM = false;
+            lastBeatCounter = Global.counterBPM;
         }
-        else if (Global.switchStateBPM == true)
+        else if (Global.counterBPM != lastBeatCounter)
         {
             print("Her?");
             stateDuration -= 1;
-            Global.switchStateBPM = false;
+            lastBeatCounter = Global.counterBPM;
         }
     }
 
