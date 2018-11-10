@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class Move
+public class MoveList
 {
     [XmlAttribute("listNum")]
     public string listNum;

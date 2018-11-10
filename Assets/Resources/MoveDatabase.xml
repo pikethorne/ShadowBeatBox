@@ -5,27 +5,27 @@
   
   <MoveLists>
     <MoveList listNum="1">
-      <Moves>RightPunch,LeftPunch,Idle,WindUp</Moves>
+      <Moves>RightJab,LeftJab,NervIdle,RightJabTell</Moves>
       <Duration>2,2,2,2</Duration>
     </MoveList>
 
     <MoveList listNum="2">
-      <Moves>Idle,WindUp,Idle,WindUp</Moves>
+      <Moves>LeftJab,RightJabTell,NervIdle,RightJabTell</Moves>
       <Duration>2,2,2,2</Duration>
     </MoveList>
 
     <MoveList listNum="3">
-      <Moves>WindUp,WindUp,WindUp,WindUp</Moves>
+      <Moves>RightJabTell,RightJabTell,RightJabTell,RightJabTell</Moves>
       <Duration>2,2,2,2</Duration>
     </MoveList>
 
     <MoveList listNum="4">
-      <Moves>RightPunch,LeftPunch,RightPunch,LeftPunch</Moves>
+      <Moves>RightJab,LeftJab,RightJab,LeftJab</Moves>
       <Duration>2,2,2,2</Duration>
     </MoveList>
 
     <MoveList listNum="X">
-      <Moves>Idle,Idle,Idle,Idle</Moves>
+      <Moves>RightJab,NervIdle,NervIdle,NervIdle</Moves>
       <Duration>2,2,2,2</Duration>
     </MoveList>
     

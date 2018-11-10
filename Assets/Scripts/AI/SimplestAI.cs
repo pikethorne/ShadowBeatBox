@@ -8,70 +8,45 @@ using UnityEngine;
 /// </summary>
 public class SimplestAI : MonoBehaviour
 {
-
-    private State _state;
-    private EnemyUnit MoveSet;
     MoveLoader parsedList;
+    MoveContainer mc;
+    Animator anim;
+    MoveList activeMoveList;
 
-    public bool updateState = false;
-    public int stateDuration = 0;
+    public const string path = "MoveDatabase";
 
+    int stateDuration = 0;
 
-    /// <summary>
-    /// State declarations
-    /// </summary>
-    public enum State
-    {
-        RightPunch,
-        LeftPunch,
-        WindUp,
-        Idle,
-        UpdateState
-    }
+    int activeMoveIndex = 4;
+
+    public int randomMoveList;
+
 
     /// <summary>
     /// Start function, initializes state as well as starts state machine
     /// </summary>
     private void Start()
     {
-        MoveSet = GetComponent<EnemyUnit>();
         parsedList = GetComponent<MoveLoader>();
-        _state = State.UpdateState;
+        anim = GetComponent<Animator>();
+        mc = MoveContainer.Load(path);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Global.switchStateBPM == true && stateDuration == 0)
+        if (Global.switchStateBPM == true && stateDuration <= 0)
         {
-            UpdateStateSwitch(stateDuration);
+            UpdateState();
+            
             Global.switchStateBPM = false;
-        } else if (Global.switchStateBPM == true)
-        {
-            stateDuration -= 1;
         }
-    }
-
-    /// <summary>
-    /// Checks to see if conditions are correct for a state switch
-    /// </summary>
-    private void UpdateStateSwitch(int duration)
-    {
-        //if (duration == Global.counterBPM)
-        //{
-        //    Global.counterBPM = 0;
-        //    updateState = true;
-        //    UpdateState();
-        //}
-        //else if(duration == 0)
-        //{
-        //    Global.counterBPM = 0;
-        //    updateState = true;
-        //    UpdateState();
-        //}
-        Global.counterBPM = 0;
-        updateState = true;
-        UpdateState();
+        else if (Global.switchStateBPM == true)
+        {
+            print("Her?");
+            stateDuration -= 1;
+            Global.switchStateBPM = false;
+        }
     }
 
     /// <summary>
@@ -79,99 +54,34 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void UpdateState()
     {
-        string newState;
-        int randomMoveList = Random.Range(0, parsedList.parsedMoves.Count / 4);
-        Debug.Log("Update State");
-
-        for (int i = (randomMoveList * 4); i < ((randomMoveList + 1) * 4); i++)
+        
+        if (activeMoveIndex >= 4)
         {
-            newState = parsedList.parsedMoves[i];
-            stateDuration = int.Parse(parsedList.parsedDuration[i]);
+            
+            randomMoveList = Random.Range(0, mc.moves.Count);
+            activeMoveList = mc.moves[randomMoveList];
+            activeMoveIndex = 0;
 
-            switch(newState)
-            {
-                case "RightPunch":
-                    _state = State.RightPunch;
-                    EnemyActions();
-                    updateState = false;
-                    break;
-                case "LeftPunch":
-                    _state = State.LeftPunch;
-                    EnemyActions();
-                    updateState = false;
-                    break;
-                case "WindUp":
-                    _state = State.WindUp;
-                    EnemyActions();
-                    updateState = false;
-                    break;
-                case "Idle":
-                    _state = State.Idle;
-                    EnemyActions();
-                    updateState = false;
-                    break;
-            }
-            //while (updateState == false)
-            //{
-            //    UpdateStateSwitch(stateDuration);
-            //}
+            EnemyActions(activeMoveList.moves.Split(',')[activeMoveIndex]);
+            stateDuration = int.Parse(activeMoveList.duration.Split(',')[activeMoveIndex]);
         }
-        //UpdateState();
+        else
+        {
+            EnemyActions(activeMoveList.moves.Split(',')[activeMoveIndex]);
+
+            stateDuration = int.Parse(activeMoveList.duration.Split(',')[activeMoveIndex]);
+        }
+
+        activeMoveIndex = activeMoveIndex + 1;
 
     }
 
     /// <summary>
     /// Enemy Action state machine
     /// </summary>
-    private void EnemyActions()
+    private void EnemyActions(string animationTransition)
     {
-        switch (_state)
-        {
-            case State.RightPunch:
-                RightPunchFunc();
-                break;
-            case State.LeftPunch:
-                LeftPunchFunc();
-                break;
-            case State.WindUp:
-                WindUpFunc();
-                break;
-            case State.Idle:
-                IdleFunc();
-                break;
-            case State.UpdateState:
-                UpdateState();
-                break;
-        }
-    }
-
-    private void RightPunchFunc()
-    {
-        MoveSet.RightPunch();
-    }
-
-    private void LeftPunchFunc()
-    {
-        MoveSet.LeftPunch();
-    }
-
-    private void WindUpFunc()
-    {
-        MoveSet.WindUp();
-    }
-
-    private void IdleFunc()
-    {
-        MoveSet.Idle();
-    }
-
-    private void PrintList(List<string> listOne)
-    {
-        foreach (var item in listOne)
-        {
-            print(item);
-            print(listOne.Count);
-        }
+        anim.Play(animationTransition, 0, 0f);
     }
 }
 

@@ -14,7 +14,7 @@ public class MoveLoader : MonoBehaviour
     {
         MoveContainer mc = MoveContainer.Load(path);
 
-        foreach (Move moves in mc.moves)
+        foreach (MoveList moves in mc.moves)
         {
             parsedMoves.AddRange(moves.moves.Split(','));
             parsedDuration.AddRange(moves.duration.Split(','));
