@@ -6,69 +6,37 @@ public class BeatController : MonoBehaviour {
 
     AudioSource song;
     public float BPM;
-    
-    List<BeatObject> beatList = new List<BeatObject>();
-
-    /// <summary>
-    /// Class that holds information for each Beat.
-    /// </summary>
-    class BeatObject {
-        public GameObject ObjectPassed;
-        public float Numerator;
-        public float Denominator;
-        public float MeasuresToWait;
-
-        public BeatObject(float beatNumerator, float beatDenominator, float measuresToWait = 0, GameObject g = null)
-        {
-            ObjectPassed = g;
-            Numerator = beatNumerator;
-            Denominator = beatDenominator;
-            MeasuresToWait = measuresToWait;
-        }
-    }
+    bool stop = true;
 
     float measureLength = 0;
     // Use this for initialization
     void Start () {
-        measureLength = 240 / BPM;
         song = GetComponent<AudioSource>();
         StartSong();
     }
-    
+
     /// <summary>
     /// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
     /// </summary>
-    public void StartSong()
+    /// <param name="numerator">Optional</param>
+    /// <param name="denominator">Optional</param>
+    /// <param name="newBPM">Optional</param>
+    public void StartSong(int numerator = 1, int denominator = 8, int newBPM = 0)
     {
-        BeatObject beat1 = new BeatObject(1, 8);
-        BeatObject beat2 = new BeatObject(2, 8);
-        BeatObject beat3 = new BeatObject(3, 8);
-        BeatObject beat4 = new BeatObject(4, 8);
-        BeatObject beat5 = new BeatObject(5, 8);
-        BeatObject beat6 = new BeatObject(6, 8);
-        BeatObject beat7 = new BeatObject(7, 8);
-        BeatObject beat8 = new BeatObject(8, 8);
-        beatList.Add(beat1);
-        beatList.Add(beat2);
-        beatList.Add(beat3);
-        beatList.Add(beat4);
-        beatList.Add(beat5);
-        beatList.Add(beat6);
-        beatList.Add(beat7);
-        beatList.Add(beat8);
-
-        RunBeatList();
+        if (newBPM != 0)
+            BPM = newBPM;
+        measureLength = 240f / BPM;
+        StartCoroutine(QueueBeat(numerator, denominator));
         song.Play();
     }
 
     /// <summary>
-    /// Method that iterates through the Beat List and runs the QueueBeat Coroutine for each Beat.
+    /// Stops the current Song being played on the AudioSource and stops the QueueBeat coroutine
     /// </summary>
-    void RunBeatList()
+    public void StopSong()
     {
-        foreach(BeatObject b in beatList){
-            StartCoroutine(QueueBeat(b.Numerator, b.Denominator, b.MeasuresToWait, b.ObjectPassed));
-        }
+        song.Stop();
+        StopCoroutine("QueueBeat");
     }
 
     /// <summary>
@@ -76,20 +44,12 @@ public class BeatController : MonoBehaviour {
     /// </summary>
     /// <param name="beatNumerator"></param>
     /// <param name="beatDenominator"></param>
-    /// <param name="measuresToWait"></param>
     /// <param name="g">Object Reference if Necessary</param>
     /// <returns></returns>
-    IEnumerator QueueBeat(float beatNumerator, float beatDenominator, float measuresToWait = 0, GameObject g = null)
+    IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
-        // Math Stuff to determine the time to do beat things
-        float timeInMeasure = ((240f / BPM) / beatDenominator) * beatNumerator;
-        float buffer = (240f / BPM) / beatDenominator;
-        if (measuresToWait != 0)
-            yield return new WaitForSeconds((240f / BPM) * measuresToWait);
-        yield return new WaitForSeconds(timeInMeasure - buffer);
-        int ratioOverflow = (int)beatNumerator / (int)beatDenominator;
-        if (ratioOverflow <= 1)
-            ratioOverflow = 1;
+        // timeInMeasure is the time a beat takes
+        float timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
         while (song.isPlaying)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
@@ -99,9 +59,8 @@ public class BeatController : MonoBehaviour {
             Global.counterBPM += 1;
 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            if (measuresToWait != 0)
-                yield break;
-            yield return new WaitForSeconds((240f / BPM) * ratioOverflow);
+            
+            yield return new WaitForSeconds(timeInMeasure);
         }
         yield break;
     }
