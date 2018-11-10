@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+
+<MoveDatabase>
+  
+  <MoveLists>
+    <MoveList listNum="1">
+      <Moves>RightPunch,LeftPunch,Idle,WindUp</Moves>
+      <Duration>2,2,2,2</Duration>
+    </MoveList>
+
+    <MoveList listNum="2">
+      <Moves>Idle,WindUp,Idle,WindUp</Moves>
+      <Duration>2,2,2,2</Duration>
+    </MoveList>
+
+    <MoveList listNum="3">
+      <Moves>WindUp,WindUp,WindUp,WindUp</Moves>
+      <Duration>2,2,2,2</Duration>
+    </MoveList>
+
+    <MoveList listNum="4">
+      <Moves>RightPunch,LeftPunch,RightPunch,LeftPunch</Moves>
+      <Duration>2,2,2,2</Duration>
+    </MoveList>
+
+    <MoveList listNum="X">
+      <Moves>Idle,Idle,Idle,Idle</Moves>
+      <Duration>2,2,2,2</Duration>
+    </MoveList>
+    
+  </MoveLists>
+</MoveDatabase>
