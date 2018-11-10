@@ -96,6 +96,7 @@ public class BeatController : MonoBehaviour {
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
             Global.switchStateBPM = true;
+            Global.counterBPM += 1;
 
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             if (measuresToWait != 0)

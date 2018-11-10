@@ -11,4 +11,7 @@ public class Move
 
     [XmlElement("Moves")]
     public string moves;
+
+    [XmlElement("Duration")]
+    public string duration;
 }

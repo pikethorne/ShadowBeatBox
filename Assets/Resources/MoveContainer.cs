@@ -10,6 +10,7 @@ public class MoveContainer {
 
     [XmlArray("MoveLists")]
     [XmlArrayItem("MoveList")]
+    [XmlArrayItem("Duration")]
     public List<Move> moves = new List<Move>();
 
     public static MoveContainer Load(string path)
