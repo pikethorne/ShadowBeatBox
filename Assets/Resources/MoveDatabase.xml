@@ -5,27 +5,27 @@
   
   <MoveLists>
     <MoveList listNum="1">
-      <Moves>RightJab,LeftJab,NervIdle,RightJabTell</Moves>
+      <Moves>NervIdle,RightJabTell,RightJab,NervIdle</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
 
     <MoveList listNum="2">
-      <Moves>LeftJab,RightJabTell,NervIdle,RightJabTell</Moves>
+      <Moves>RightJabTell,RightJab,NervIdle,NervIdle</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
 
     <MoveList listNum="3">
-      <Moves>RightJabTell,RightJabTell,RightJabTell,RightJabTell</Moves>
+      <Moves>RightJabTell,RightJab,RightJabTell,RightJab</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
 
     <MoveList listNum="4">
-      <Moves>RightJab,LeftJab,RightJab,LeftJab</Moves>
+      <Moves>RightJabTell,LeftJab,RightJabTell,RightJab</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
 
     <MoveList listNum="X">
-      <Moves>RightJab,NervIdle,NervIdle,NervIdle</Moves>
+      <Moves>NervIdle,NervIdle,NervIdle,NervIdle</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
     

@@ -5,7 +5,6 @@ using UnityEngine;
 public class PunchState2 : MonoBehaviour, IState
 {
     EnemyAI owner;
-    private EnemyUnit Punch2;
     //private static PunchState2 instance;
 
     public PunchState2(EnemyAI owner)
@@ -15,13 +14,12 @@ public class PunchState2 : MonoBehaviour, IState
 
     void Start()
     {
-        Punch2 = GetComponent<EnemyUnit>();
+
     }
 
     public void Enter()
     {
         Debug.Log("Entering Punch State");
-        Punch2.RightPunch();
     }
 
     public void Execute()
