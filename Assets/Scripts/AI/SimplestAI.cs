@@ -45,7 +45,6 @@ public class SimplestAI : MonoBehaviour
         }
         else if (Global.counterBPM != lastBeatCounter)
         {
-            print("Her?");
             stateDuration -= 1;
             lastBeatCounter = Global.counterBPM;
         }

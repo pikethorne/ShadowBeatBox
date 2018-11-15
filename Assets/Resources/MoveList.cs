@@ -14,7 +14,4 @@ public class MoveList
 
     [XmlElement("Duration")]
     public string duration;
-
-    [XmlElement("Fix Carlos")]
-    public string fixCarlos;
 }
