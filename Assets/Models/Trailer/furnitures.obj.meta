@@ -1,21 +1,20 @@
 fileFormatVersion: 2
-guid: 7b2f451dc7f3fad4f8b8342970631a0f
+guid: 085ecce48e6e8a9489a1dc9ab2ed10d3
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Squish
-    4300000: GD_mesh.001
-    9500000: //RootNode
-    13700000: //RootNode
-    2186277476908879412: ImportLogs
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Squish
-    second: {fileID: 2100000, guid: 83d971dc1e971294db95113fe0ecbdd4, type: 2}
+    100000: default
+    100002: //RootNode
+    400000: default
+    400002: //RootNode
+    2100000: brochure
+    2100002: Material
+    2100004: None
+    2100006: mug
+    2300000: default
+    3300000: default
+    4300000: default
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -46,10 +45,9 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.08
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
-    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -66,17 +64,14 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
-    previousCalculatedGlobalScale: 0.08
-    hasPreviousCalculatedGlobalScale: 1
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
-    blendShapeNormalImportMode: 1
-    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -95,7 +90,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

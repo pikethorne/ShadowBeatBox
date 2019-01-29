@@ -11,21 +11,49 @@ public class UnitHealth : MonoBehaviour
 	private float currentHealth;
 	[SerializeField] private UnitProperties properties;
 	[SerializeField] private TMPro.TextMeshPro healthText;
+    /// <summary>
+    /// Number of times they have been knocked unconcious.
+    /// </summary>
+    private int timesKnockedDown = 0;
 
 	public float Health
 	{
-		get { return currentHealth; }
+		get
+        {
+            return currentHealth;
+        }
 		set
 		{
 			currentHealth = value;
-			CheckForDeath();
+			//CheckForDeath();
 		}
 	}
 
-	/// <summary>
-	/// Decides if the player has died and will execute action if it has.
-	/// </summary>
-	private void CheckForDeath()
+    /// <summary>
+    /// True when they have been eliminated for the round.
+    /// </summary>
+    public bool IsKnockedOut
+    {
+        get; set;
+    }
+
+    /// <summary>
+    /// True when their health is above zero.
+    /// </summary>
+    public bool IsUnconcious
+    {
+        get
+        {
+            return Health <= 0;
+        }
+    }
+
+    /// <summary>
+    /// Decides if the player has been knocked out.
+    /// Currently obsolete due to it destroying the GameObject.
+    /// </summary>
+    [Obsolete]
+    private void CheckForDeath()
 	{
 		if(Health <= 0)
 		{
@@ -37,14 +65,19 @@ public class UnitHealth : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		Health = properties.maxHealth;
-		TestHealthText();
+		InitializeUnit();
 	}
 
-	/// <summary>
-	/// This method is not intended to be used outside of testing. It should eventually be removed when a true health UI is created.
-	/// </summary>
-	private void TestHealthText()
+	public void InitializeUnit()
+	{
+		Health = properties.maxHealth;
+		timesKnockedDown = 0;
+	}
+
+    /// <summary>
+    /// This method is not intended to be used outside of testing. It should eventually be removed when a true health UI is created.
+    /// </summary>
+    private void TestHealthText()
 	{
 		if (healthText)
 		{
@@ -59,10 +92,9 @@ public class UnitHealth : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Returns the current health percentage of this unit from 1 to 0 (100% to 0%).
-	/// Will return higher than 1 assuming they have higher than their initial health or less than zero if their health has gone negative.
+	/// Returns the current health percentage of this unit from 1 to 0 (100% to 0%). 
+    /// Can return values out of the 1 to 0 range.
 	/// </summary>
-	/// <returns>Returns the current health percentage of this unit.</returns>
 	public float GetHealthPercentage()
 	{
 		return currentHealth / properties.maxHealth;
@@ -72,7 +104,6 @@ public class UnitHealth : MonoBehaviour
 	/// Returns the current health percentage of this unit from 1 to 0 (100% to 0%).
 	/// Will never be greater than 1 or less than 0. 
 	/// </summary>
-	/// <returns>Returns the current health percentage of this unit.</returns>
 	public float GetHealthPercentageClamped()
 	{
 		return Mathf.Clamp(currentHealth / properties.maxHealth, 0, 1);
