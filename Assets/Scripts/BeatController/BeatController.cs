@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeatController : MonoBehaviour {
+public class BeatController : MonoBehaviour
+{
 
-    AudioSource song;
     public float BPM;
-    bool stop = true;
+    public float timeInMeasure;
 
-    float measureLength = 0;
-    // Use this for initialization
+    private AudioSource song;    
+    private bool stop = true;
+    private float measureLength = 0;
+    
     void Start () {
         song = GetComponent<AudioSource>();
         StartSong();
+        timeInMeasure = 0;
     }
 
     /// <summary>
@@ -49,7 +52,7 @@ public class BeatController : MonoBehaviour {
     IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
         // timeInMeasure is the time a beat takes
-        float timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
+        timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
         while (song.isPlaying)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
@@ -68,4 +71,6 @@ public class BeatController : MonoBehaviour {
     void Update () {
         
 	}
+
+    
 }
