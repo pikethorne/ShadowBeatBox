@@ -14,8 +14,8 @@ public class RoundManager : MonoBehaviour
 	private int victoryThreshold = 2;
 	private int redScore = 0;
 	private int greenScore = 0;
-	private string redName = "Defender";
-	private string greenName = "Challenger";
+	private string redName = "Defender", greenName = "Challenger";
+	private Sprite redIcon, greenIcon;
 	private List<UnitHealth> redTeam = new List<UnitHealth>();
 	private List<UnitHealth> greenTeam = new List<UnitHealth>();
 	private ScoreboardManager scoreboard;
@@ -49,6 +49,14 @@ public class RoundManager : MonoBehaviour
 	public int GetMaxRounds()
 	{
 		return numberOfRounds;
+	}
+	public Sprite GetGreenIcon()
+	{
+		return greenIcon;
+	}
+	public Sprite GetRedIcon()
+	{
+		return redIcon;
 	}
 	public bool RedActive
 	{
@@ -91,6 +99,8 @@ public class RoundManager : MonoBehaviour
 			Debug.LogError("There is not enough Unit Health components present in the scene to make rounds work. Destroying the Round Manager to prevent chaos.");
 			Destroy(this);
 		}
+		redTeam.Clear();
+		greenTeam.Clear();
 		int i = 1;
 		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
@@ -98,10 +108,14 @@ public class RoundManager : MonoBehaviour
 			{
 				case 1:
 					redTeam.Add(unit);
+					redName = unit.GetProperties().title;
+					redIcon = unit.GetProperties().icon;
 					i++;
 					break;
 				case 2:
 					greenTeam.Add(unit);
+					greenName = unit.GetProperties().title;
+					greenIcon = unit.GetProperties().icon;
 					i++;
 					break;
 				case 3:

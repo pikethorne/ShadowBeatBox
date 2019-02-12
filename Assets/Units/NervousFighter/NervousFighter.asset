@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Nervous Boi
   description: He would rather not be fighting you.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 1abdda10700b8dc4aa3d625377774baa, type: 3}
   maxHealth: 25
   hitThreshold: 0.3
   hitAudioLines:

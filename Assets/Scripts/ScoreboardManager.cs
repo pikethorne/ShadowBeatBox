@@ -41,6 +41,8 @@ public class ScoreboardManager : MonoBehaviour
 	{
 		redName.text = roundManager.GetRedName();
 		greenName.text = roundManager.GetGreenName();
+		redFighterImage.sprite = roundManager.GetRedIcon();
+		greenFighterImage.sprite = roundManager.GetGreenIcon();
 		score.text = roundManager.GetRedScore() + " - " + roundManager.GetGreenScore();
 		roundNumber.text = "ROUND " + roundManager.GetCurrentRound() + "/" + roundManager.GetMaxRounds(); 
 	}
