@@ -15,6 +15,7 @@ public class UnitHealth : MonoBehaviour
     /// Number of times they have been knocked unconcious.
     /// </summary>
     private int timesKnockedDown = 0;
+	private bool blocking;
 
 	public float Health
 	{
@@ -120,5 +121,15 @@ public class UnitHealth : MonoBehaviour
 	{
 		if (properties) return properties;
 		else return null;
+	}
+
+	public IEnumerator Block(float blockingLength)
+	{
+		if (blocking) yield return null;
+		blocking = true;
+		Immune = true;
+		yield return new WaitForSeconds(blockingLength);
+		Immune = false;
+		blocking = false;
 	}
 }

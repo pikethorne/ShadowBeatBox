@@ -16,6 +16,7 @@ public class UnitManager : MonoBehaviour
 	[SerializeField] internal float talkingDelay = 2.5f;
 	[Tooltip("The offset from the origin of the object at which text should spawn.")]
 	[SerializeField] internal Vector3 textSpawnOffset;
+	[SerializeField] private bool playFeedback = true;
 	/// <summary>
 	/// When should the next talking line play?
 	/// </summary>
@@ -23,6 +24,7 @@ public class UnitManager : MonoBehaviour
 	internal AudioSource audioSource;
 	internal UnitHealth unitHealth;
 	#endregion
+
 
 
 	/// <summary>
@@ -71,7 +73,6 @@ public class UnitManager : MonoBehaviour
 		if (other.gameObject.GetComponent<Glove>() && other.gameObject.GetComponent<Glove>().Self != unitHealth)
 		{
 			Glove enemyGlove = other.gameObject.GetComponent<Glove>();
-			Debug.Log(other.name + " trigger hit me with " + enemyGlove.Velocity);
 			//PlayRandomAudio(punches);
 			if (unitHealth.Immune)
 			{
@@ -93,7 +94,10 @@ public class UnitManager : MonoBehaviour
 	/// </summary>
 	internal void FailedHit()
 	{
-		Instantiate(Resources.Load<GameObject>("Generic/BadText"), transform.position + textSpawnOffset, transform.rotation);
+		if(playFeedback)
+		{
+			Instantiate(Resources.Load<GameObject>("Generic/BadText"), transform.position + textSpawnOffset, transform.rotation);
+		}
 		AttemptFailLine();
 	}
 
@@ -114,10 +118,13 @@ public class UnitManager : MonoBehaviour
 	/// </summary>
 	internal void SuccessfulHit(float hitStrength)
 	{
-		Instantiate(Resources.Load<GameObject>("Generic/GoodText"), transform.position + textSpawnOffset, transform.rotation);
+		if(playFeedback)
+		{
+			Instantiate(Resources.Load<GameObject>("Generic/GoodText"), transform.position + textSpawnOffset, transform.rotation);
+		}
 		//PlayRandomAudio(hits);
 		AttemptSuccessLine();
-		unitHealth.DealDamage(hitStrength);
+		unitHealth.DealDamage(1);
 	}
 
 	/// <summary>

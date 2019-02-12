@@ -58,6 +58,14 @@ public class RoundManager : MonoBehaviour
 	{
 		return redIcon;
 	}
+	public UnitHealth GetGreenFighter()
+	{
+		return greenTeam[0];
+	}
+	public UnitHealth GetRedFighter()
+	{
+		return redTeam[0];
+	}
 	public bool RedActive
 	{
 		get

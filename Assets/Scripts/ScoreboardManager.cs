@@ -11,8 +11,9 @@ using TMPro;
 public class ScoreboardManager : MonoBehaviour
 {
 	//Red team is on left side of scoreboard while green is on right side.
-	[SerializeField] private TextMeshProUGUI redName, greenName, score, roundNumber, timer;
+	[SerializeField] private TextMeshProUGUI redName, greenName, score, roundNumber, timer, redHealth, greenHealth;
 	[SerializeField] private Image redFighterImage, greenFighterImage;
+	private UnitHealth greenFighter, redFighter;
 	private RoundManager roundManager;
 
 	private void Awake()
@@ -24,6 +25,8 @@ public class ScoreboardManager : MonoBehaviour
 	private void Start()
 	{
 		UpdateScoreboardText();
+		redFighter = roundManager.GetRedFighter();
+		greenFighter = roundManager.GetGreenFighter();
 	}
 
 	private void Update()
@@ -32,6 +35,8 @@ public class ScoreboardManager : MonoBehaviour
 		// For now it just displays the amount of time since the scene started running.
 		TimeSpan time = TimeSpan.FromSeconds(Time.time);
 		timer.text = string.Format("{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
+		redHealth.text = "HP:" + Mathf.FloorToInt(redFighter.Health).ToString();
+		greenHealth.text = "HP:" + Mathf.FloorToInt(greenFighter.Health).ToString();
 	}
 
 	/// <summary>

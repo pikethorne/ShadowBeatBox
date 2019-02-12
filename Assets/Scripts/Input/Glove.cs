@@ -142,11 +142,14 @@ public class Glove : MonoBehaviour
 	/// <summary>
 	/// Plays a sound, creates particles, and records the next time to block. Currently doesn't actually do anything gameplay wise.
 	/// </summary>
+	[ContextMenu(itemName: "Trigger Block")]
 	public void TriggerBlock()
 	{
 		PlayRandomAudio(goodBlock);
 		Instantiate(blockParticle, transform);
+		transform.root.GetComponentInChildren<UnitHealth>().StartCoroutine(transform.root.GetComponentInChildren<UnitHealth>().Block(0.5f));
 		nextBlockTime = Time.time + blockCooldown;
+		
 	}
 
 	/// <summary>

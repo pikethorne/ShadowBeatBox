@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Player
   description: A real professional
-  icon: {fileID: 21300000, guid: 91b480a4153c3a549ac9da4a987977e7, type: 3}
-  maxHealth: 500
-  hitThreshold: 1
+  icon: {fileID: 21300000, guid: 2e1177f129e370a41be6e95c658d9ebc, type: 3}
+  maxHealth: 20
+  hitThreshold: 0
   hitAudioLines: []
   hitFailedAudioLines: []
