@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +26,8 @@ public class ScoreboardManager : MonoBehaviour
 	{
 		//TODO: This should probably countdown to some sort of time-out, such as time until the end of the song.
 		// For now it just displays the amount of time since the scene started running.
-		timer.text = Time.time.ToString("N2");
+		TimeSpan time = TimeSpan.FromSeconds(Time.time);
+		timer.text = string.Format("{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
 	}
 
 	/// <summary>

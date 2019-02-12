@@ -24,6 +24,7 @@ public class UnitManager : MonoBehaviour
 	internal UnitHealth unitHealth;
 	#endregion
 
+
 	/// <summary>
 	/// Returns the reference to the audio source.
 	/// </summary>
@@ -66,14 +67,19 @@ public class UnitManager : MonoBehaviour
 	//Default unity method
 	private void OnTriggerEnter(Collider other)
 	{
-		Glove glove;
-		if (glove = other.gameObject.GetComponent<Glove>())
+		
+		if (other.gameObject.GetComponent<Glove>() && other.gameObject.GetComponent<Glove>().Self != unitHealth)
 		{
-			Debug.Log(other.name + " trigger hit me with " + glove.Velocity);
+			Glove enemyGlove = other.gameObject.GetComponent<Glove>();
+			Debug.Log(other.name + " trigger hit me with " + enemyGlove.Velocity);
 			//PlayRandomAudio(punches);
-			if (glove.Velocity > unitHealth.GetProperties().hitThreshold)
+			if (unitHealth.Immune)
 			{
-				SuccessfulHit(glove.Velocity);
+				return;
+			}
+			if (enemyGlove.Velocity > unitHealth.GetProperties().hitThreshold)
+			{
+				SuccessfulHit(enemyGlove.Velocity);
 			}
 			else
 			{
@@ -108,7 +114,6 @@ public class UnitManager : MonoBehaviour
 	/// </summary>
 	internal void SuccessfulHit(float hitStrength)
 	{
-		Debug.Log("We made it");
 		Instantiate(Resources.Load<GameObject>("Generic/GoodText"), transform.position + textSpawnOffset, transform.rotation);
 		//PlayRandomAudio(hits);
 		AttemptSuccessLine();

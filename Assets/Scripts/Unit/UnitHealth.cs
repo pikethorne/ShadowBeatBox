@@ -29,12 +29,18 @@ public class UnitHealth : MonoBehaviour
 		}
 	}
 
-    /// <summary>
-    /// True when they have been eliminated for the round.
-    /// </summary>
-    public bool IsKnockedOut
+	public bool Immune
+	{
+		get; set;
+	}
+
+	/// <summary>
+	/// True when they have been eliminated for the round.
+	/// </summary>
+	public bool IsKnockedOut
     {
-        get; set;
+		get;
+		set;
     }
 
     /// <summary>
@@ -71,6 +77,7 @@ public class UnitHealth : MonoBehaviour
 	public void InitializeUnit()
 	{
 		Health = properties.maxHealth;
+		Immune = true;
 		timesKnockedDown = 0;
 	}
 
@@ -81,7 +88,7 @@ public class UnitHealth : MonoBehaviour
 	{
 		if (healthText)
 		{
-			healthText.text = "HP: " + Health.ToString("n1") + "/" + properties.maxHealth.ToString("n1");
+			healthText.text = "HP:" + Mathf.FloorToInt(Health).ToString();
 		}
 	}
 

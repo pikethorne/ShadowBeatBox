@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeatController : MonoBehaviour {
-
+public class BeatController : MonoBehaviour
+{
     AudioSource song;
     public float BPM;
-    bool stop = true;
-
     float measureLength = 0;
-    // Use this for initialization
-    void Start () {
-        song = GetComponent<AudioSource>();
-        StartSong();
-    }
+	Coroutine beat;
+	public bool TriggerBeats
+	{
+		get; set;
+	}
 
     /// <summary>
     /// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
@@ -26,8 +24,7 @@ public class BeatController : MonoBehaviour {
         if (newBPM != 0)
             BPM = newBPM;
         measureLength = 240f / BPM;
-        StartCoroutine(QueueBeat(numerator, denominator));
-        song.Play();
+		beat = StartCoroutine(QueueBeat(numerator, denominator));
     }
 
     /// <summary>
@@ -35,8 +32,7 @@ public class BeatController : MonoBehaviour {
     /// </summary>
     public void StopSong()
     {
-        song.Stop();
-        StopCoroutine("QueueBeat");
+        StopCoroutine(beat);
     }
 
     /// <summary>
@@ -50,22 +46,19 @@ public class BeatController : MonoBehaviour {
     {
         // timeInMeasure is the time a beat takes
         float timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
-        while (song.isPlaying)
+        while (true)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-            Global.counterBPM += 1;
+			if(TriggerBeats)
+			{
+				Global.counterBPM += 1;
+			}
 
-            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            
-            yield return new WaitForSeconds(timeInMeasure);
+			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+			yield return new WaitForSeconds(timeInMeasure);
         }
-        yield break;
     }
-
-    // Update is called once per frame
-    void Update () {
-        
-	}
 }
