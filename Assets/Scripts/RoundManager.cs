@@ -19,9 +19,9 @@ public class RoundManager : MonoBehaviour
 	private List<UnitHealth> redTeam = new List<UnitHealth>();
 	private List<UnitHealth> greenTeam = new List<UnitHealth>();
 	private ScoreboardManager scoreboard;
-	private AudioSource audioSource;
+	private AudioSource audioSource, scoreboardAudio;
 	private BeatController beatController;
-	private Animator animator;
+	private Animator animator, scoreboardAnimator;
 	[SerializeField] private AudioClip whistle, bell, three, two, one, winner, loser, draw;
 	#endregion
 
@@ -125,19 +125,22 @@ public class RoundManager : MonoBehaviour
 			unit.InitializeUnit();
 		}
 
+		scoreboardAnimator.Play("RoundBeginCountdown");
+
 		//TODO: Disable combat preventing early hits.
 		yield return new WaitForSeconds(2);
 
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(three);
+		scoreboardAudio.PlayOneShot(three);
 		yield return new WaitForSeconds(1);
 
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(two);
+		scoreboardAudio.PlayOneShot(two);
 		yield return new WaitForSeconds(1);
 
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(one);
+		scoreboardAudio.PlayOneShot(one);
 		yield return new WaitForSeconds(1);
 
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(bell);
+		scoreboardAnimator.Play("RoundBegin");
+		scoreboardAudio.PlayOneShot(bell);
 		beatController.TriggerBeats = true;
 		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
@@ -163,6 +166,12 @@ public class RoundManager : MonoBehaviour
 		beatController = GetComponent<BeatController>();
 		audioSource = GetComponent<AudioSource>();
 		ScanSceneForBoxers();
+	}
+
+	private void Start()
+	{
+		scoreboardAudio = scoreboard.GetComponent<AudioSource>();
+		scoreboardAnimator = scoreboard.GetComponent<Animator>();
 		StartCoroutine(StartRound());
 	}
 
@@ -177,17 +186,17 @@ public class RoundManager : MonoBehaviour
 		{
 			unit.InitializeUnit();
 		}
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(whistle, 1);
+		scoreboardAudio.PlayOneShot(whistle, 1);
 
 		//Awards score and plays animation based off of the winner.
 		switch (roundWinner)
 		{
 			case BoxingTeams.red:
-				scoreboard.GetComponent<Animator>().Play("RedRound");
+				scoreboardAnimator.Play("RedRound");
 				redScore++;
 				break;
 			case BoxingTeams.green:
-				scoreboard.GetComponent<Animator>().Play("GreenRound");
+				scoreboardAnimator.Play("GreenRound");
 				greenScore++;
 				break;
 		}
@@ -195,7 +204,7 @@ public class RoundManager : MonoBehaviour
 		yield return new WaitForSeconds(1);
 
 		scoreboard.UpdateScoreboardText();
-		scoreboard.GetComponent<AudioSource>().PlayOneShot(whistle, 0.5f);
+		scoreboardAudio.PlayOneShot(whistle, 0.5f);
 
 		yield return new WaitForSeconds(4);
 
@@ -207,22 +216,22 @@ public class RoundManager : MonoBehaviour
 			if (redScore >= victoryThreshold && redScore > greenScore)
 			{
 				//TODO: Red victory
-				scoreboard.GetComponent<Animator>().Play("RedMatch");
-				scoreboard.GetComponent<AudioSource>().PlayOneShot(winner);
+				scoreboardAnimator.Play("RedMatch");
+				scoreboardAudio.PlayOneShot(winner);
 				yield break;
 			}
 			else if (greenScore >= victoryThreshold && greenScore > redScore)
 			{
 				//TODO: Green victory
-				scoreboard.GetComponent<Animator>().Play("GreenMatch");
-				scoreboard.GetComponent<AudioSource>().PlayOneShot(loser);
+				scoreboardAnimator.Play("GreenMatch");
+				scoreboardAudio.PlayOneShot(loser);
 				yield break;
 			}
 			else if (currentRound > numberOfRounds)
 			{
 				//TODO: Draw, such as 1-1 in best of 2
-				scoreboard.GetComponent<Animator>().Play("DrawMatch");
-				scoreboard.GetComponent<AudioSource>().PlayOneShot(draw);
+				scoreboardAnimator.Play("DrawMatch");
+				scoreboardAudio.PlayOneShot(draw);
 				yield break;
 			}
 		}

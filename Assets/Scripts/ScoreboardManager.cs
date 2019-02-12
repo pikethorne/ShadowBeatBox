@@ -15,10 +15,14 @@ public class ScoreboardManager : MonoBehaviour
 	[SerializeField] private Image redFighterImage, greenFighterImage;
 	private RoundManager roundManager;
 
-	private void Start()
+	private void Awake()
 	{
 		roundManager = FindObjectOfType<RoundManager>();
 		roundManager.SetScoreboard(this);
+	}
+
+	private void Start()
+	{
 		UpdateScoreboardText();
 	}
 
