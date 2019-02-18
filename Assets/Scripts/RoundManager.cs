@@ -14,13 +14,15 @@ public class RoundManager : MonoBehaviour
 	private int victoryThreshold = 2;
 	private int redScore = 0;
 	private int greenScore = 0;
-	private string redName = "Defender";
-	private string greenName = "Challenger";
+	private string redName = "Defender", greenName = "Challenger";
+	private Sprite redIcon, greenIcon;
 	private List<UnitHealth> redTeam = new List<UnitHealth>();
 	private List<UnitHealth> greenTeam = new List<UnitHealth>();
 	private ScoreboardManager scoreboard;
-	bool redActive = false;
-	bool greenActive = false;
+	private AudioSource audioSource, scoreboardAudio;
+	private BeatController beatController;
+	private Animator animator, scoreboardAnimator;
+	[SerializeField] private AudioClip whistle, bell, three, two, one, winner, loser, draw;
 	#endregion
 
 	#region Getters/Setters
@@ -48,6 +50,50 @@ public class RoundManager : MonoBehaviour
 	{
 		return numberOfRounds;
 	}
+	public Sprite GetGreenIcon()
+	{
+		return greenIcon;
+	}
+	public Sprite GetRedIcon()
+	{
+		return redIcon;
+	}
+	public UnitHealth GetGreenFighter()
+	{
+		return greenTeam[0];
+	}
+	public UnitHealth GetRedFighter()
+	{
+		return redTeam[0];
+	}
+	public bool RedActive
+	{
+		get
+		{
+			foreach (UnitHealth boxer in redTeam)
+			{
+				if (!boxer.IsUnconcious)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	public bool GreenActive
+	{
+		get
+		{
+			foreach (UnitHealth boxer in greenTeam)
+			{
+				if (!boxer.IsUnconcious)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 	#endregion
 
 	/// <summary>
@@ -56,6 +102,13 @@ public class RoundManager : MonoBehaviour
 	public void ScanSceneForBoxers()
 	{
 		//TODO: As of right now it only support one unit per team, if we change the logic there can be multiple fighters on a team.
+		if(FindObjectsOfType<UnitHealth>().Length < 2)
+		{
+			Debug.LogError("There is not enough Unit Health components present in the scene to make rounds work. Destroying the Round Manager to prevent chaos.");
+			Destroy(this);
+		}
+		redTeam.Clear();
+		greenTeam.Clear();
 		int i = 1;
 		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
@@ -63,10 +116,14 @@ public class RoundManager : MonoBehaviour
 			{
 				case 1:
 					redTeam.Add(unit);
+					redName = unit.GetProperties().title;
+					redIcon = unit.GetProperties().icon;
 					i++;
 					break;
 				case 2:
 					greenTeam.Add(unit);
+					greenName = unit.GetProperties().title;
+					greenIcon = unit.GetProperties().icon;
 					i++;
 					break;
 				case 3:
@@ -81,15 +138,38 @@ public class RoundManager : MonoBehaviour
 	/// </summary>
 	public IEnumerator StartRound()
 	{
-		foreach(UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		beatController.TriggerBeats = false;
+		animator.Play("SongFadeIn");
+		audioSource.Play();
+		beatController.StartSong();
+		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
 			unit.InitializeUnit();
 		}
+
+		scoreboardAnimator.Play("RoundBeginCountdown");
+
 		//TODO: Disable combat preventing early hits.
-		//TODO: Play animation for round countdown.
-		yield return new WaitForSeconds(5);
-		//TODO: Begin music.
-		//TODO: Play whistle sound.
+		yield return new WaitForSeconds(2);
+
+		scoreboardAudio.PlayOneShot(three);
+		yield return new WaitForSeconds(1);
+
+		scoreboardAudio.PlayOneShot(two);
+		yield return new WaitForSeconds(1);
+
+		scoreboardAudio.PlayOneShot(one);
+		yield return new WaitForSeconds(1);
+
+		scoreboardAnimator.Play("RoundBegin");
+		scoreboardAudio.PlayOneShot(bell);
+		beatController.TriggerBeats = true;
+		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		{
+			unit.Immune = false;
+		}
+
+
 		yield break;
 	}
 
@@ -97,18 +177,23 @@ public class RoundManager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		//Checks if the round has ended. This is quite costly to be run in fixed update and there is likely a more efficient approach.
-		if (CheckForRoundEnd())
-		{
-			if		(redActive && !greenActive) StartCoroutine(EndRound(BoxingTeams.red));
-			else if (!redActive && greenActive) StartCoroutine(EndRound(BoxingTeams.green));
-			else	Debug.LogWarning("Round was thought to have ended but there is not a winning team.");
-		}
+		if		(!GreenActive) StartCoroutine(EndRound(BoxingTeams.red));
+		else if (!RedActive) StartCoroutine(EndRound(BoxingTeams.green));
 	}
 
 	//Called before Start().
 	private void Awake()
 	{
+		animator = GetComponent<Animator>();
+		beatController = GetComponent<BeatController>();
+		audioSource = GetComponent<AudioSource>();
 		ScanSceneForBoxers();
+	}
+
+	private void Start()
+	{
+		scoreboardAudio = scoreboard.GetComponent<AudioSource>();
+		scoreboardAnimator = scoreboard.GetComponent<Animator>();
 		StartCoroutine(StartRound());
 	}
 
@@ -117,15 +202,23 @@ public class RoundManager : MonoBehaviour
 	/// </summary>
 	public IEnumerator EndRound(BoxingTeams roundWinner)
 	{
+		animator.Play("SongFadeOut");
+		beatController.StopSong();
+		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		{
+			unit.InitializeUnit();
+		}
+		scoreboardAudio.PlayOneShot(whistle, 1);
+
 		//Awards score and plays animation based off of the winner.
 		switch (roundWinner)
 		{
 			case BoxingTeams.red:
-				scoreboard.GetComponent<Animator>().Play("RedRound");
+				scoreboardAnimator.Play("RedRound");
 				redScore++;
 				break;
 			case BoxingTeams.green:
-				scoreboard.GetComponent<Animator>().Play("GreenRound");
+				scoreboardAnimator.Play("GreenRound");
 				greenScore++;
 				break;
 		}
@@ -133,29 +226,34 @@ public class RoundManager : MonoBehaviour
 		yield return new WaitForSeconds(1);
 
 		scoreboard.UpdateScoreboardText();
-		scoreboard.GetComponent<AudioSource>().Play();
+		scoreboardAudio.PlayOneShot(whistle, 0.5f);
 
 		yield return new WaitForSeconds(4);
 
+		audioSource.Stop();
 		currentRound++;
 
 		//Match end conditions
 		{
-			if (redScore >= victoryThreshold)
+			if (redScore >= victoryThreshold && redScore > greenScore)
 			{
 				//TODO: Red victory
-				scoreboard.GetComponent<Animator>().Play("RedMatch");
+				scoreboardAnimator.Play("RedMatch");
+				scoreboardAudio.PlayOneShot(winner);
 				yield break;
 			}
-			else if (greenScore >= victoryThreshold)
+			else if (greenScore >= victoryThreshold && greenScore > redScore)
 			{
 				//TODO: Green victory
-				scoreboard.GetComponent<Animator>().Play("GreenMatch");
+				scoreboardAnimator.Play("GreenMatch");
+				scoreboardAudio.PlayOneShot(loser);
 				yield break;
 			}
 			else if (currentRound > numberOfRounds)
 			{
 				//TODO: Draw, such as 1-1 in best of 2
+				scoreboardAnimator.Play("DrawMatch");
+				scoreboardAudio.PlayOneShot(draw);
 				yield break;
 			}
 		}
@@ -165,35 +263,6 @@ public class RoundManager : MonoBehaviour
 		StartCoroutine(StartRound()); //Starts a new round since the match end conditions didn't end the IEnumerator.
 
 		yield break;
-	}
-
-	/// <summary>
-	/// Checks if a team has been kncoked out. 
-	/// </summary>
-	/// <returns>Returns true when a team is no longer able to fight.</returns>
-	public bool CheckForRoundEnd()
-	{
-		//Check if red team is active.
-		foreach (UnitHealth boxer in redTeam)
-		{
-			if(!boxer.IsKnockedOut)
-			{
-				redActive = true;
-				break;
-			}
-		}
-		
-		//Check if green team is active.
-		foreach (UnitHealth boxer in greenTeam)
-		{
-			if (!boxer.IsKnockedOut)
-			{
-				greenActive = true;
-				break;
-			}
-		}
-
-		return !redActive || !greenActive; //If either red or green is not active return true, since one team is no longer fighting.
 	}
 
 	public enum BoxingTeams
@@ -227,7 +296,6 @@ public class RoundManager : MonoBehaviour
 	[ContextMenu("Green Point")]
 	public void GreenWinner()
 	{
-		Debug.Log("It happened");
 		StartCoroutine(EndRound(BoxingTeams.green));
 	}
 

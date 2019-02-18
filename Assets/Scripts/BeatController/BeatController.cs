@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class BeatController : MonoBehaviour
 {
-
+    AudioSource song;
     public float BPM;
     public float timeInMeasure;
-
-    private AudioSource song;    
-    private bool stop = true;
-    private float measureLength = 0;
-    
-    void Start () {
-        song = GetComponent<AudioSource>();
-        StartSong();
-        timeInMeasure = 0;
-    }
+    float measureLength = 0;
+	Coroutine beat;
+	public bool TriggerBeats
+	{
+		get; set;
+	}
 
     /// <summary>
     /// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
@@ -29,8 +25,7 @@ public class BeatController : MonoBehaviour
         if (newBPM != 0)
             BPM = newBPM;
         measureLength = 240f / BPM;
-        StartCoroutine(QueueBeat(numerator, denominator));
-        song.Play();
+		beat = StartCoroutine(QueueBeat(numerator, denominator));
     }
 
     /// <summary>
@@ -38,8 +33,7 @@ public class BeatController : MonoBehaviour
     /// </summary>
     public void StopSong()
     {
-        song.Stop();
-        StopCoroutine("QueueBeat");
+        StopCoroutine(beat);
     }
 
     /// <summary>
@@ -52,25 +46,20 @@ public class BeatController : MonoBehaviour
     IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
         // timeInMeasure is the time a beat takes
+        while (true)
         timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
-        while (song.isPlaying)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-            Global.counterBPM += 1;
+			if(TriggerBeats)
+			{
+				Global.counterBPM += 1;
+			}
 
-            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            
-            yield return new WaitForSeconds(timeInMeasure);
+			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+			yield return new WaitForSeconds(timeInMeasure);
         }
-        yield break;
     }
-
-    // Update is called once per frame
-    void Update () {
-        
-	}
-
-    
 }

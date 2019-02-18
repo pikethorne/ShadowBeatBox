@@ -13,7 +13,12 @@ public class Glove : MonoBehaviour
 	private Vector3 lastPosition;
 	private AudioSource audioSource;
 	private SteamVR_Input_Sources thisHand;
+	private bool isSteamVRPlayer = false;
 	private float nextBlockTime;
+	public UnitHealth Self
+	{
+		get; set;
+	}
 
 	//Inspector Visible
 	[Header("Audio")]
@@ -92,14 +97,22 @@ public class Glove : MonoBehaviour
 	#region Methods
 	private void Awake()
 	{
-		thisHand = GetComponent<Hand>().handType;
+		if(GetComponent<Hand>())
+		{
+			thisHand = GetComponent<Hand>().handType;
+			isSteamVRPlayer = true;
+		}
+		Self = GetComponentInParent<UnitHealth>();
 	}
 
 	private void Update ()
 	{
 		//TODO: This velocity code works but can sometimes be inconsistent. Might be better to use multiple values and get the average for a more accurate value.
 		CalculateDisplacement();
-		CheckBlock();
+		if(isSteamVRPlayer)
+		{
+			CheckBlock();
+		}
 	}
 
 	/// <summary>
@@ -129,11 +142,14 @@ public class Glove : MonoBehaviour
 	/// <summary>
 	/// Plays a sound, creates particles, and records the next time to block. Currently doesn't actually do anything gameplay wise.
 	/// </summary>
+	[ContextMenu(itemName: "Trigger Block")]
 	public void TriggerBlock()
 	{
 		PlayRandomAudio(goodBlock);
 		Instantiate(blockParticle, transform);
+		transform.root.GetComponentInChildren<UnitHealth>().StartCoroutine(transform.root.GetComponentInChildren<UnitHealth>().Block(0.5f));
 		nextBlockTime = Time.time + blockCooldown;
+		
 	}
 
 	/// <summary>
