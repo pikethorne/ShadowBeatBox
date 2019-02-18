@@ -6,6 +6,7 @@ public class BeatController : MonoBehaviour
 {
     AudioSource song;
     public float BPM;
+    public float timeInMeasure;
     float measureLength = 0;
 	Coroutine beat;
 	public bool TriggerBeats
@@ -45,8 +46,8 @@ public class BeatController : MonoBehaviour
     IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
         // timeInMeasure is the time a beat takes
-        float timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
         while (true)
+        timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
