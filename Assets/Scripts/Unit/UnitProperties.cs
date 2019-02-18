@@ -11,13 +11,21 @@ public class UnitProperties : ScriptableObject
 {
 	[Header("Metadata")]
 	public string title;
-	[TextArea] public string description;
+	[TextArea]
+	public string description;
 	public Sprite icon;
+	[Range(0f, 1f)]
+	[Tooltip("Probability that they will stand back up after being knocked down. (0-100%)")]
+	public float getUpChance = 0.35f;
+	[Range(0f, 1f)]
+	[Tooltip("When recovering from a knockdown, percentage of health they will recover. (0-100%)")]
+	public float getUpHealthRecovered = 0.5f;
 
 	[Header("Gameplay")]
 	public int maxHealth;
 	[Tooltip("The amount of velocity required for a punch to impact this unit.")]
-	[Range(0f, 2f)]public float hitThreshold = 1;
+	[Range(0f, 2f)]
+	public float hitThreshold = 1;
 
 	[Header("Audio")]
 	public AudioEvent[] hitAudioLines;

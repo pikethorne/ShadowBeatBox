@@ -6,11 +6,12 @@ using UnityEngine;
 /// AI state machine for Shadowboxing
 /// Uses enum for state machines along with switch statement
 /// </summary>
+[RequireComponent(typeof(UnitHealth))]
 public class SimplestAI : MonoBehaviour
 {
     MoveLoader parsedList;
-    MoveContainer mc;
-    Animator anim;
+    MoveContainer moveContainer;
+    Animator animator;
     MoveList activeMoveList;
 
     public const string path = "MoveDatabase";
@@ -29,8 +30,8 @@ public class SimplestAI : MonoBehaviour
     private void Start()
     {
         parsedList = GetComponent<MoveLoader>();
-        anim = GetComponent<Animator>();
-        mc = MoveContainer.Load(path);
+        animator = GetComponent<Animator>();
+        moveContainer = MoveContainer.Load(path);
         lastBeatCounter = Global.counterBPM;
     }
 
@@ -59,8 +60,8 @@ public class SimplestAI : MonoBehaviour
         if (activeMoveIndex >= 4)
         {
             
-            randomMoveList = Random.Range(0, mc.moves.Count);
-            activeMoveList = mc.moves[randomMoveList];
+            randomMoveList = Random.Range(0, moveContainer.moves.Count);
+            activeMoveList = moveContainer.moves[randomMoveList];
             activeMoveIndex = 0;
 
             EnemyActions(activeMoveList.moves.Split(',')[activeMoveIndex]);
@@ -82,8 +83,11 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void EnemyActions(string animationTransition)
     {
-        anim.Play(animationTransition, 0, 0f);
-    }
+		if(!GetComponent<UnitHealth>().KnockedDown)
+		{
+			animator.Play(animationTransition, 0, 0f);
+		}
+	}
 }
 
 public class Global
