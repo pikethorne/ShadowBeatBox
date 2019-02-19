@@ -45,9 +45,9 @@ public class BeatController : MonoBehaviour
     /// <returns></returns>
     IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
-        // timeInMeasure is the time a beat takes
-        while (true)
-        timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
+		// timeInMeasure is the time a beat takes
+		timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
+		while (true)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
             // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
