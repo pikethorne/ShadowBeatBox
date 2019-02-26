@@ -4,123 +4,92 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
+    private BeatController beatController;
+	[System.Obsolete]
+	[SerializeField] private bool logState;
+	[System.Obsolete] private int lastBPM;
 
-    public float timeSinceBeat;
-    private BeatController beatObj;
+	/// <summary>
+	/// Dictionary of values in order from best to worst. The order of these is critical to proper execution.
+	/// </summary>
+	public static readonly Dictionary<HitRating, float> ratingThresholds = new Dictionary<HitRating, float>
+	{
+		{ HitRating.Excellent, 0.8f },
+		{ HitRating.Good, 0.7f },
+		{ HitRating.Okay, 0.6f },
+		{ HitRating.Bad, 0.5f },
+	};
 
-    // Start is called before the first frame update
     void Start()
     {
+        beatController = FindObjectOfType<BeatController>();
+	}
 
-        timeSinceBeat = 0;
-        beatObj = new BeatController();
+	private void Update()
+	{
+		//Print the state every frame for testing/debug
+		if(logState)
+		{
+			PrintState();
+		}
+	}
 
-    }
+	/// <summary>
+	/// This method is temporary and should be removed later.
+	/// </summary>
+	[System.Obsolete]
+	private void PrintState()
+	{
+		float score = GetScore();
+		if (lastBPM != Global.counterBPM)
+		{
+			lastBPM = Global.counterBPM;
+			Debug.LogWarning("-- Beat Happened --");
+		}
+		Debug.LogFormat("Score: {0:F2} Rating: {1} {2}", score, GetHitTiming(score).ToString(), GetHitRating(score).ToString());
+	}
 
-    // Update is called once per frame
-    void Update()
+	/// <summary>
+	/// Gets the rating of the timing relative to the beat. 
+	/// Returns from (1 to -1) where -1 is just before next beat and 1 is immediately after most recent.
+	/// </summary>
+	public float GetScore()
     {
-
-        timeSinceBeat += Time.deltaTime;
-
+        return Mathf.Cos((Time.time - beatController.LastBeatTime) / (beatController.NextBeatTime - beatController.LastBeatTime) * Mathf.PI);
     }
 
-    public float CheckScore()
-    {
-        
-        float score = 0;
+	/// <summary>
+	/// Determines the rating of the score by iterating through a dictionary of threshold values.
+	/// </summary>
+	public HitRating GetHitRating(float score)
+	{
+		//In order of best score to worst: if our score is greater than the threshold, return that rating.
+		foreach (KeyValuePair<HitRating, float> entry in ratingThresholds)
+		{
+			if(Mathf.Abs(score) >= entry.Value)
+			{
+				return entry.Key;
+			}
+		}
+		return HitRating.Miss;
+	}
 
-        float badEarly = beatObj.TimeInMeasure * 0.7f;
-        // -0.3 -> 0.3
-        float badLate = beatObj.TimeInMeasure * 0.3f;
+	/// <summary>
+	/// Determines if the beat was too early or too late.
+	/// </summary>
+	public HitRelativeTiming GetHitTiming(float score)
+	{
+		//If the score is positive, it is after a recent beat. Otherwise it must be before a beat.
+		return score > 0 ? HitRelativeTiming.After : HitRelativeTiming.Before;
+	}
 
-        float goodEarly = beatObj.TimeInMeasure * 0.8f;
-        // -0.2 -> 0.2
-        float goodLate = beatObj.TimeInMeasure * 0.2f;
+	public enum HitRating
+	{
+		Excellent, Good, Okay, Bad, Miss
+	}
 
-        float niceEarly = beatObj.TimeInMeasure * 0.88f;
-        // -0.12 -> 0.12
-        float niceLate = beatObj.TimeInMeasure * 0.12f;
-
-        float exEarly = beatObj.TimeInMeasure * 0.96f;
-        // -0.04 -> 0.04
-        float exLate = beatObj.TimeInMeasure * 0.04f;
-
-        // Anything else  => MISS
-
-        if ( timeSinceBeat >= 0 && timeSinceBeat < badLate )
-        {
-            if ( timeSinceBeat >= exLate )
-            {
-                if ( timeSinceBeat >= niceLate )
-                {
-                    if ( timeSinceBeat >= goodLate )
-                    {
-                        // Bad
-                    }
-                    else
-                    {
-                        // Good
-                    }
-                }
-                else
-                {
-                    // Nice
-                }
-            }
-            else
-            {
-                // Excellent
-            }
-        }
-        else if ( timeSinceBeat >= badLate )
-        {
-            // Miss
-        }
-
-        if ( timeSinceBeat < 0 && timeSinceBeat > badEarly )
-        {
-            if ( timeSinceBeat <= exEarly )
-            {
-                if ( timeSinceBeat <= niceEarly )
-                {
-                    if ( timeSinceBeat <= goodEarly )
-                    {
-                        // Bad
-                    }
-                    else
-                    {
-                        // Good
-                    }
-                }
-                else
-                {
-                    // Nice
-                }
-            }
-            else
-            {
-                // Excellent
-            }
-        }
-        else if ( timeSinceBeat <= badEarly )
-        {
-            // Miss
-        }
-
-        return score;
-
-    }
-
-    /*
-    * If( counter not equal to last counter )
-    * {
-    *      Some Timing Variable = Time Update
-    *      
-    *      Need the timeInMeasure variable from BeatController
-    *      This is because if the time a beat takes is 1.5 sec for example then
-    *      you could say a hit that happens at 0.2 sec is slightly late and a
-    *      hit at 1.3 seconds is slightly early
-    * }
-    */
+	public enum HitRelativeTiming
+	{
+		Before, After
+	}
 }

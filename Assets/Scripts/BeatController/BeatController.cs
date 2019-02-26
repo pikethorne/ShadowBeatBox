@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(RoundManager))]
 public class BeatController : MonoBehaviour
 {
-	float nextBeatTime;
 	Coroutine beat;
 	public bool TriggerBeats
 	{
@@ -31,6 +30,17 @@ public class BeatController : MonoBehaviour
 	{
 		get; set;
 	}
+	public float NextBeatTime
+	{
+		get;
+		private set;
+	}
+	public float LastBeatTime
+	{
+		get;
+		private set;
+	}
+
 
 	/// <summary>
 	/// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
@@ -61,18 +71,21 @@ public class BeatController : MonoBehaviour
 	/// </summary>
 	IEnumerator TrackBeats()
 	{
-		nextBeatTime = Time.time + BeatLength;
+		NextBeatTime = Time.time + BeatLength;
+		LastBeatTime = Time.time;
 		while (true)
 		{
-			bool beatReady = Time.time >= nextBeatTime;
+			bool beatReady = Time.time >= NextBeatTime;
 			if (!TriggerBeats && beatReady)
 			{
-				nextBeatTime += BeatLength;
+				LastBeatTime = NextBeatTime;
+				NextBeatTime = LastBeatTime + BeatLength;
 			}
 			else if (TriggerBeats && beatReady)
 			{
 				Global.counterBPM += 1;
-				nextBeatTime += BeatLength;
+				LastBeatTime = NextBeatTime;
+				NextBeatTime = LastBeatTime + BeatLength;
 			}
 
 			//Wait until next frame to check again.
