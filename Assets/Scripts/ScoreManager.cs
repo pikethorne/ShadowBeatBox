@@ -30,21 +30,21 @@ public class ScoreManager : MonoBehaviour
         
         float score = 0;
 
-        float badEarly = beatObj.timeInMeasure * 0.7f;
+        float badEarly = beatObj.TimeInMeasure * 0.7f;
         // -0.3 -> 0.3
-        float badLate = beatObj.timeInMeasure * 0.3f;
+        float badLate = beatObj.TimeInMeasure * 0.3f;
 
-        float goodEarly = beatObj.timeInMeasure * 0.8f;
+        float goodEarly = beatObj.TimeInMeasure * 0.8f;
         // -0.2 -> 0.2
-        float goodLate = beatObj.timeInMeasure * 0.2f;
+        float goodLate = beatObj.TimeInMeasure * 0.2f;
 
-        float niceEarly = beatObj.timeInMeasure * 0.88f;
+        float niceEarly = beatObj.TimeInMeasure * 0.88f;
         // -0.12 -> 0.12
-        float niceLate = beatObj.timeInMeasure * 0.12f;
+        float niceLate = beatObj.TimeInMeasure * 0.12f;
 
-        float exEarly = beatObj.timeInMeasure * 0.96f;
+        float exEarly = beatObj.TimeInMeasure * 0.96f;
         // -0.04 -> 0.04
-        float exLate = beatObj.timeInMeasure * 0.04f;
+        float exLate = beatObj.TimeInMeasure * 0.04f;
 
         // Anything else  => MISS
 

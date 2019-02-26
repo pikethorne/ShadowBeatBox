@@ -2,25 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RoundManager))]
 public class BeatController : MonoBehaviour
 {
-    AudioSource song;
-    public float BPM;
-    public float timeInMeasure;
     float measureLength = 0;
 	Coroutine beat;
 	public bool TriggerBeats
 	{
 		get; set;
 	}
+	public Song Song
+	{
+		get; set;
+	}
+	public float BPM
+	{
+		get; set;
+	}
+	public float TimeInMeasure
+	{
+		get; set;
+	}
 
-    /// <summary>
-    /// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
-    /// </summary>
-    /// <param name="numerator">Optional</param>
-    /// <param name="denominator">Optional</param>
-    /// <param name="newBPM">Optional</param>
-    public void StartSong(int numerator = 1, int denominator = 8, int newBPM = 0)
+	/// <summary>
+	/// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
+	/// </summary>
+	/// <param name="numerator">Optional</param>
+	/// <param name="denominator">Optional</param>
+	/// <param name="newBPM">Optional</param>
+	public void StartSong(int numerator = 1, int denominator = 8, int newBPM = 0)
     {
         if (newBPM != 0)
             BPM = newBPM;
@@ -46,7 +56,7 @@ public class BeatController : MonoBehaviour
     IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
     {
 		// timeInMeasure is the time a beat takes
-		timeInMeasure = (measureLength / beatDenominator) * beatNumerator;
+		TimeInMeasure = (measureLength / beatDenominator) * beatNumerator;
 		while (true)
         {
             // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
@@ -59,7 +69,7 @@ public class BeatController : MonoBehaviour
 
 			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-			yield return new WaitForSeconds(timeInMeasure);
+			yield return new WaitForSeconds(TimeInMeasure);
         }
     }
 }

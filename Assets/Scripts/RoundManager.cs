@@ -6,6 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Responsible for keeping track of round score and management of round starting/ending.
 /// </summary>
+[RequireComponent(typeof(BeatController))]
 public class RoundManager : MonoBehaviour
 {
 	#region Fields
@@ -22,6 +23,7 @@ public class RoundManager : MonoBehaviour
 	private AudioSource audioSource, scoreboardAudio;
 	private BeatController beatController;
 	private Animator animator, scoreboardAnimator;
+	[SerializeField] private FightPlaylist playlist;
 	[SerializeField] private AudioClip whistle, bell, three, two, one, winner, loser, draw;
 	#endregion
 
@@ -138,10 +140,14 @@ public class RoundManager : MonoBehaviour
 	/// </summary>
 	public IEnumerator StartRound()
 	{
+		Song targetSong = playlist.GetSong(GetCurrentState());
 		beatController.TriggerBeats = false;
-		animator.Play("SongFadeIn");
-		audioSource.Play();
+		beatController.BPM = targetSong.beatsPerMinute;
 		beatController.StartSong();
+		animator.Play("SongFadeIn");
+		audioSource.clip = targetSong.soundFile;
+		audioSource.Play();
+
 		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
 			unit.InitializeUnit();
@@ -150,16 +156,17 @@ public class RoundManager : MonoBehaviour
 		scoreboardAnimator.Play("RoundBeginCountdown");
 
 		//TODO: Disable combat preventing early hits.
-		yield return new WaitForSeconds(2);
+
+		yield return new WaitForSeconds(60 / beatController.BPM * (targetSong.beatsToWait - 6));
 
 		scoreboardAudio.PlayOneShot(three);
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
 		scoreboardAudio.PlayOneShot(two);
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
 		scoreboardAudio.PlayOneShot(one);
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
 		scoreboardAnimator.Play("RoundBegin");
 		scoreboardAudio.PlayOneShot(bell);
@@ -171,6 +178,22 @@ public class RoundManager : MonoBehaviour
 
 
 		yield break;
+	}
+
+	private SongTrigger GetCurrentState()
+	{
+		if(GetCurrentRound() == 1)
+		{
+			return SongTrigger.MatchStart;
+		}
+		else if(GetCurrentRound() == numberOfRounds)
+		{
+			return SongTrigger.FinalRound;
+		}
+		else
+		{
+			return SongTrigger.Fighting;
+		}
 	}
 
 	//Called every physics update

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75751c329d3bf3e4c94f8cdadddf3950, type: 3}
+  m_Name: Test Playlist
+  m_EditorClassIdentifier: 
+  playlistSongs:
+  - name: Match Start
+    trigger: 0
+    songsToPlay:
+    - {fileID: 11400000, guid: 38fd43a15bcd4ef49beb12a56a7d4423, type: 2}
+  - name: Fighting
+    trigger: 1
+    songsToPlay:
+    - {fileID: 11400000, guid: 3d1461884dafe7444bc02f3da8d807f9, type: 2}
+  - name: Final Round
+    trigger: 2
+    songsToPlay:
+    - {fileID: 11400000, guid: b71c2c6f3ea61734fbea1f6f50185997, type: 2}
