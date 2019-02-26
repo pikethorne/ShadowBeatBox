@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundFile: {fileID: 8300000, guid: 72cf6fd0d9a93f04db1f8c98be398173, type: 3}
   beatsPerMinute: 80
-  beatsToWait: 16
+  beatsToWait: 8

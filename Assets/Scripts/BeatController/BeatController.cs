@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(RoundManager))]
 public class BeatController : MonoBehaviour
 {
-    float measureLength = 0;
+	float nextBeatTime;
 	Coroutine beat;
 	public bool TriggerBeats
 	{
@@ -17,7 +17,15 @@ public class BeatController : MonoBehaviour
 	}
 	public float BPM
 	{
-		get; set;
+		get;
+		private set;
+	}
+	public float BeatLength
+	{
+		get
+		{
+			return 60 / BPM;
+		}
 	}
 	public float TimeInMeasure
 	{
@@ -30,12 +38,13 @@ public class BeatController : MonoBehaviour
 	/// <param name="numerator">Optional</param>
 	/// <param name="denominator">Optional</param>
 	/// <param name="newBPM">Optional</param>
-	public void StartSong(int numerator = 1, int denominator = 8, int newBPM = 0)
+	public void StartSong(float newBPM = 0)
     {
         if (newBPM != 0)
-            BPM = newBPM;
-        measureLength = 240f / BPM;
-		beat = StartCoroutine(QueueBeat(numerator, denominator));
+		{
+			BPM = newBPM;
+		}
+		beat = StartCoroutine(TrackBeats());
     }
 
     /// <summary>
@@ -46,30 +55,28 @@ public class BeatController : MonoBehaviour
         StopCoroutine(beat);
     }
 
-    /// <summary>
-    /// Coroutine that loops a specific amount of time depending on the Beat specified.
-    /// </summary>
-    /// <param name="beatNumerator"></param>
-    /// <param name="beatDenominator"></param>
-    /// <param name="g">Object Reference if Necessary</param>
-    /// <returns></returns>
-    IEnumerator QueueBeat(float beatNumerator, float beatDenominator, GameObject g = null)
-    {
-		// timeInMeasure is the time a beat takes
-		TimeInMeasure = (measureLength / beatDenominator) * beatNumerator;
+	/// <summary>
+	/// Coroutine that will keep track of the timing of the next beat. 
+	/// Runs every frame, if the frame is after the beat we trigger an event.
+	/// </summary>
+	IEnumerator TrackBeats()
+	{
+		nextBeatTime = Time.time + BeatLength;
 		while (true)
-        {
-            // THIS IS WHERE AN ACTION WOULD HAPPEN WHEN THE BEAT HAPPENS
-            // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-			if(TriggerBeats)
+		{
+			bool beatReady = Time.time >= nextBeatTime;
+			if (!TriggerBeats && beatReady)
+			{
+				nextBeatTime += BeatLength;
+			}
+			else if (TriggerBeats && beatReady)
 			{
 				Global.counterBPM += 1;
+				nextBeatTime += BeatLength;
 			}
 
-			// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-			yield return new WaitForSeconds(TimeInMeasure);
-        }
-    }
+			//Wait until next frame to check again.
+			yield return null;
+		}
+	}
 }

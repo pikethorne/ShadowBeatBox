@@ -142,8 +142,7 @@ public class RoundManager : MonoBehaviour
 	{
 		Song targetSong = playlist.GetSong(GetCurrentState());
 		beatController.TriggerBeats = false;
-		beatController.BPM = targetSong.beatsPerMinute;
-		beatController.StartSong();
+		beatController.StartSong(targetSong.beatsPerMinute);
 		animator.Play("SongFadeIn");
 		audioSource.clip = targetSong.soundFile;
 		audioSource.Play();
@@ -321,6 +320,4 @@ public class RoundManager : MonoBehaviour
 	{
 		StartCoroutine(EndRound(BoxingTeams.green));
 	}
-
-
 }

@@ -38,7 +38,7 @@ public class SimplestAI : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Global.counterBPM != lastBeatCounter && stateDuration <= 0)
+        if (Global.counterBPM != lastBeatCounter && stateDuration <= 1)
         {
             UpdateState();
             
