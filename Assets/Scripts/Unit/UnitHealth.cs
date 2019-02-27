@@ -6,10 +6,10 @@ using UnityEngine;
 /// <summary>
 /// UnitHealth is responsible for managing the health of a unit and taking action accordingly. 
 /// </summary>
+[RequireComponent(typeof(UnitManager))]
 public class UnitHealth : MonoBehaviour
 {
 	private float currentHealth;
-	[SerializeField] private UnitProperties properties;
 	[SerializeField] private TMPro.TextMeshPro healthText;
 	private Animator animator;
     /// <summary>
@@ -18,6 +18,7 @@ public class UnitHealth : MonoBehaviour
     private int timesKnockedDown = 0;
 	private bool blocking;
 	private static readonly int knockdownLimit = 3;
+	private UnitProperties properties;
 
 	public float Health
 	{
@@ -156,6 +157,7 @@ public class UnitHealth : MonoBehaviour
 	{
 		InitializeUnit();
 		animator = GetComponent<Animator>();
+		properties = GetComponent<UnitManager>().GetProperties();
 	}
 
 	public void InitializeUnit()
@@ -202,12 +204,6 @@ public class UnitHealth : MonoBehaviour
 	{
 		return Mathf.Clamp(currentHealth / properties.maxHealth, 0, 1);
 	}
-	
-	public UnitProperties GetProperties()
-	{
-		if (properties) return properties;
-		else return null;
-	}
 
 	public IEnumerator Block(float blockingLength)
 	{
@@ -217,5 +213,11 @@ public class UnitHealth : MonoBehaviour
 		yield return new WaitForSeconds(blockingLength);
 		Immune = false;
 		blocking = false;
+	}
+
+	public UnitProperties GetProperties()
+	{
+		if (properties) return properties;
+		else return null;
 	}
 }

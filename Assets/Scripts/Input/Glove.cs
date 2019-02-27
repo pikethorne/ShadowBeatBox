@@ -107,7 +107,6 @@ public class Glove : MonoBehaviour
 
 	private void Update ()
 	{
-		//TODO: This velocity code works but can sometimes be inconsistent. Might be better to use multiple values and get the average for a more accurate value.
 		CalculateDisplacement();
 		if(isSteamVRPlayer)
 		{
@@ -120,7 +119,7 @@ public class Glove : MonoBehaviour
 	/// </summary>
 	private void CalculateDisplacement()
 	{
-		displacement = (lastPosition.magnitude - gameObject.transform.position.magnitude) / Time.deltaTime;
+		displacement = (lastPosition - gameObject.transform.position).magnitude / Time.deltaTime;
 		lastPosition = gameObject.transform.position;
 	}
 

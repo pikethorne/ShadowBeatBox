@@ -15,8 +15,10 @@ MonoBehaviour:
   title: Nervous Boi
   description: He would rather not be fighting you.
   icon: {fileID: 21300000, guid: 1abdda10700b8dc4aa3d625377774baa, type: 3}
+  getUpChance: 0.35
+  getUpHealthRecovered: 0.5
   maxHealth: 25
-  hitThreshold: 0.3
+  hitThreshold: 0.8
   hitAudioLines:
   - audioClip: {fileID: 0}
     playChance: 0

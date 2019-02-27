@@ -28,8 +28,8 @@ public class UnitProperties : ScriptableObject
 	public float hitThreshold = 1;
 
 	[Header("Audio")]
-	public AudioEvent[] hitAudioLines;
-	public AudioEvent[] hitFailedAudioLines;
+	public AudioClip[] goodHitSounds;
+	public AudioClip[] failedHitSounds;
 }
 
 [Serializable]

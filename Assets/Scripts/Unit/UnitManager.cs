@@ -3,113 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The UnitManager class is a potential base class which is responsible for managing a unit's properties and registering events such as hits.
+/// The UnitManager class is responsible for managing a unit's properties and registering events such as hits.
 /// </summary>
-[RequireComponent(typeof(UnitHealth))]
+[RequireComponent(typeof(UnitHealth), typeof(AudioSource))]
 public class UnitManager : MonoBehaviour
 {
 	#region Fields
-	[SerializeField] internal AudioClip[] punches;
-	[SerializeField] internal AudioClip[] hits;
-	[SerializeField] internal AudioClip[] hitAffirmation;
-	[SerializeField] internal AudioClip[] hitFailures;
-	[SerializeField] internal float talkingDelay = 2.5f;
 	[Tooltip("The offset from the origin of the object at which text should spawn.")]
 	[SerializeField] internal Vector3 textSpawnOffset;
-	[SerializeField] private bool playFeedback = true;
-	/// <summary>
-	/// When should the next talking line play?
-	/// </summary>
-	internal float waitUntil;
+	[Tooltip("The offset from the origin of the object at which text should spawn.")]
+	[SerializeField] internal bool playFeedback = true;
+	[SerializeField] internal UnitProperties properties;
 	internal AudioSource audioSource;
 	internal UnitHealth unitHealth;
 	#endregion
 
-
-
-	/// <summary>
-	/// Returns the reference to the audio source.
-	/// </summary>
-	public AudioSource Audio
-	{
-		get
-		{
-			//Returns the reference to the audio source if it exists
-			if (audioSource)
-			{
-				return audioSource;
-			}
-			//If there isn't a reference to the audio source but it exists, creates it and returns it.
-			else if (!audioSource && GetComponent<AudioSource>())
-			{
-				return audioSource = GetComponent<AudioSource>();
-			}
-			//If there isn't an audio source at all it creates one. This is just a fallback and should not be used.
-			else
-			{
-				Debug.LogWarning(gameObject.name + " doesn't have an audio source! Generating one with default settings. To prevent this add an audio source when the game is not running.");
-				return audioSource = gameObject.AddComponent<AudioSource>();
-			}
-		}
-		set
-		{
-			audioSource = value;
-		}
-	}
-
 	private void Start()
 	{
 		unitHealth = GetComponent<UnitHealth>();
-		if(!GetComponent<Rigidbody>() || !GetComponentInChildren<Collider>())
+		audioSource = GetComponent<AudioSource>();
+		if (!GetComponent<Rigidbody>() || !GetComponentInChildren<Collider>())
 		{
 			Debug.LogWarning("This unit does not have a rigidbody or a collider. This will cause punches to not register.");
 		}
 	}
 
 	//Default unity method
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider collision)
 	{
-		
-		if (other.gameObject.GetComponent<Glove>() && other.gameObject.GetComponent<Glove>().Self != unitHealth)
+		if (collision.gameObject.GetComponent<Glove>() && collision.gameObject.GetComponent<Glove>().Self != unitHealth) //Check if the incoming collider is a glove, and is not owned by this unit.
 		{
-			Glove enemyGlove = other.gameObject.GetComponent<Glove>();
-			//PlayRandomAudio(punches);
-			if (unitHealth.Immune)
-			{
-				return;
-			}
-			if (enemyGlove.Velocity > unitHealth.GetProperties().hitThreshold)
+			if (unitHealth.Immune) { return; } // Don't judge a hit if immune.
+
+			Glove enemyGlove = collision.gameObject.GetComponent<Glove>();
+
+			if (enemyGlove.Velocity > properties.hitThreshold)
 			{
 				SuccessfulHit(enemyGlove.Velocity);
 			}
 			else
 			{
-				FailedHit();
+				FailedHit(enemyGlove.Velocity);
 			}
-		}
-	}
-
-	/// <summary>
-	/// Triggered when a hit did not exceed the required velocity
-	/// </summary>
-	internal void FailedHit()
-	{
-		if(playFeedback)
-		{
-			Instantiate(Resources.Load<GameObject>("Generic/BadText"), transform.position + textSpawnOffset, transform.rotation);
-		}
-		AttemptFailLine();
-	}
-
-	/// <summary>
-	/// Attempts to trigger a voice line asserting a bad hit.
-	/// </summary>
-	internal void AttemptFailLine()
-	{
-		if (Time.time > waitUntil)
-		{
-			//PlayRandomAudio(hitFailures);
-			waitUntil = Time.time + talkingDelay;
 		}
 	}
 
@@ -121,21 +56,20 @@ public class UnitManager : MonoBehaviour
 		if(playFeedback)
 		{
 			Instantiate(Resources.Load<GameObject>("Generic/GoodText"), transform.position + textSpawnOffset, transform.rotation);
+			PlayRandomAudio(properties.goodHitSounds);
 		}
-		//PlayRandomAudio(hits);
-		AttemptSuccessLine();
 		unitHealth.DealDamage(1);
 	}
 
 	/// <summary>
-	/// Attempts to trigger a voice line asserting a good hit.
+	/// Triggered when a hit did not exceed the required velocity
 	/// </summary>
-	internal void AttemptSuccessLine()
+	internal void FailedHit(float hitStrength)
 	{
-		if (Time.time > waitUntil)
+		if (playFeedback)
 		{
-			//PlayRandomAudio(hitAffirmation);
-			waitUntil = Time.time + talkingDelay;
+			Instantiate(Resources.Load<GameObject>("Generic/BadText"), transform.position + textSpawnOffset, transform.rotation);
+			PlayRandomAudio(properties.failedHitSounds);
 		}
 	}
 
@@ -145,7 +79,13 @@ public class UnitManager : MonoBehaviour
 	/// <param name="clips">The array of sound files to trigger from</param>
 	internal void PlayRandomAudio(AudioClip[] clips)
 	{
-		Audio.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
+		if (clips.Length == 0) return;
+		audioSource.PlayOneShot(clips[Random.Range(0, clips.Length)]);
 	}
 
+	public UnitProperties GetProperties()
+	{
+		if (properties) return properties;
+		else return null;
+	}
 }
