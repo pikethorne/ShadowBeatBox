@@ -17,10 +17,14 @@ public class NotificationFlyUp : MonoBehaviour
 	[Tooltip("How fast the game object should try to go until it is destroyed")]
 	[SerializeField][Range(0f, 5f)] private float targetVelocity = 1f;
 
+	[Tooltip("How much the game object will rotate.")]
+	private float maxTargetRotation = 8f;
+
 	/// <summary>
 	/// When the object was created.
 	/// </summary>
 	private float initialTime;
+	private float targetRotation;
 	private Rigidbody rb;
 	private TextMeshPro text;
 	#endregion
@@ -76,12 +80,15 @@ public class NotificationFlyUp : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 		initialTime = Time.time;
 		text = GetComponent<TextMeshPro>();
+		targetRotation = UnityEngine.Random.Range(-maxTargetRotation, maxTargetRotation);
 	}
 
 	private void FixedUpdate()
 	{
 		if (Expired)
+		{
 			Destroy(gameObject);
+		}
 	}
 
 	// Update is called once per frame
@@ -89,6 +96,7 @@ public class NotificationFlyUp : MonoBehaviour
 	{
 		SetVelocity();
 		SetTextAlpha();
+		transform.Rotate(new Vector3(0, 0, transform.rotation.z - Mathf.Lerp(transform.rotation.z, targetRotation, 0.05f)), Space.World);
 	}
 
 	private void SetTextAlpha()
@@ -100,7 +108,7 @@ public class NotificationFlyUp : MonoBehaviour
 
 	private void SetVelocity()
 	{
-		rb.velocity = Vector3.up * CurrentVelocity;
+		rb.velocity = transform.up * CurrentVelocity;
 	}
 	#endregion
 }

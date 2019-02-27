@@ -153,11 +153,11 @@ public class UnitHealth : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
+		properties = GetComponent<UnitManager>().GetProperties();
 		InitializeUnit();
 		animator = GetComponent<Animator>();
-		properties = GetComponent<UnitManager>().GetProperties();
 	}
 
 	public void InitializeUnit()

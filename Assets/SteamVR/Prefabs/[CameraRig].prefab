@@ -854,7 +854,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b19fde34c855e46b7ce04954abcdb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  properties: {fileID: 11400000, guid: 6ecae55273395c8479716ee6d52728b4, type: 2}
   healthText: {fileID: 0}
 --- !u!114 &549341382
 MonoBehaviour:
@@ -868,12 +867,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a381e70d2ff237c4dad6afab6302ac63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  punches: []
-  hits: []
-  hitAffirmation: []
-  hitFailures: []
-  talkingDelay: 2.5
   textSpawnOffset: {x: 0, y: 0, z: 0}
+  playFeedback: 0
+  properties: {fileID: 11400000, guid: 6ecae55273395c8479716ee6d52728b4, type: 2}
 --- !u!136 &1391033394411858284
 CapsuleCollider:
   m_ObjectHideFlags: 0

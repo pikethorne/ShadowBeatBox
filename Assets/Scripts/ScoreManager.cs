@@ -80,7 +80,7 @@ public class ScoreManager : MonoBehaviour
 	public HitRelativeTiming GetHitTiming(float score)
 	{
 		//If the score is positive, it is after a recent beat. Otherwise it must be before a beat.
-		return score > 0 ? HitRelativeTiming.After : HitRelativeTiming.Before;
+		return score > 0 ? HitRelativeTiming.Late : HitRelativeTiming.Early;
 	}
 
 	public enum HitRating
@@ -90,6 +90,6 @@ public class ScoreManager : MonoBehaviour
 
 	public enum HitRelativeTiming
 	{
-		Before, After
+		Early, Late
 	}
 }
