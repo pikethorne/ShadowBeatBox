@@ -43,6 +43,15 @@ public class SimplestAI : MonoBehaviour
             UpdateState();
             
             lastBeatCounter = Global.counterBPM;
+
+            if ( Global.userStamina != 0)
+            {
+                Global.userStamina = Global.userStamina - 2;
+                if ( Global.userStamina < 0 )
+                {
+                    Global.userStamina = 0;
+                }
+            }
         }
         else if (Global.counterBPM != lastBeatCounter)
         {
@@ -94,4 +103,5 @@ public class Global
 {
     public static bool switchStateBPM = false;
     public static int counterBPM = 0;
+    public static int userStamina = 0;
 }

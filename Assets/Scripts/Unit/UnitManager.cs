@@ -51,7 +51,31 @@ public class UnitManager : MonoBehaviour
 
 			if (enemyGlove.Velocity > properties.hitThreshold)
 			{
-				SuccessfulHit(enemyGlove.Velocity, collision);
+                // Checks if User has punched 
+                if ( Global.userStamina < 4 )
+                {
+                    float score = scoreManager.GetScore();
+                    ScoreManager.HitRating rating = scoreManager.GetHitRating(score);
+
+                    switch (rating)
+                    {
+                        case ScoreManager.HitRating.Miss:
+                            StartCoroutine(SetImmuneForNBeats(1));
+                            FailedHit(enemyGlove.Velocity, collision);
+                            break;
+
+                        default:
+                            Global.userStamina++;
+                            SuccessfulHit(enemyGlove.Velocity, collision);
+                            break;
+                    }
+                }
+                else
+                {
+                    // If the user has punched too many times the Enemy becomes Immune as a punish
+                    StartCoroutine(SetImmuneForNBeats(2));
+                    Global.userStamina = 0;
+                }
 			}
 			else
 			{
@@ -59,6 +83,26 @@ public class UnitManager : MonoBehaviour
 			}
 		}
 	}
+
+    /// <summary>
+    /// Used to make the Unit Immune for a beat for Misses or Stamina regen times
+    /// </summary>
+    public IEnumerator SetImmuneForNBeats(int beats)
+    {
+
+        int currentBeat = Global.counterBPM;
+        int nextBeat = Global.counterBPM + beats;
+
+        while ( currentBeat != nextBeat )
+        {
+            currentBeat = Global.counterBPM;
+            unitHealth.Immune = true;
+            yield return null;
+        }
+
+        unitHealth.Immune = false;
+
+    }
 
 	/// <summary>
 	/// Triggered when a hit exceeds the required velocity.
