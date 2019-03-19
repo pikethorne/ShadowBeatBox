@@ -17,8 +17,6 @@ public class SimplestAI : MonoBehaviour
     public const string path = "MoveDatabase";
 
     int stateDuration = 0;
-    int lastBeatCounter;
-
     int activeMoveIndex = 4;
 
     public int randomMoveList;
@@ -32,43 +30,47 @@ public class SimplestAI : MonoBehaviour
         parsedList = GetComponent<MoveLoader>();
         animator = GetComponent<Animator>();
         moveContainer = MoveContainer.Load(path);
-        lastBeatCounter = Global.counterBPM;
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Global.counterBPM != lastBeatCounter && stateDuration <= 1)
-        {
-            UpdateState();
-            
-            lastBeatCounter = Global.counterBPM;
+	private void OnEnable()
+	{
+		BeatController.BeatEvent += BeatController_BeatEvent;
+	}
 
-            if ( Global.userStamina != 0)
-            {
-                Global.userStamina = Global.userStamina - 2;
-                if ( Global.userStamina < 0 )
-                {
-                    Global.userStamina = 0;
-                }
-            }
-        }
-        else if (Global.counterBPM != lastBeatCounter)
-        {
-            stateDuration -= 1;
-            lastBeatCounter = Global.counterBPM;
-        }
-    }
+	private void OnDisable()
+	{
+		BeatController.BeatEvent -= BeatController_BeatEvent;
+	}
+
+	private void BeatController_BeatEvent()
+	{
+		if(stateDuration <= 1)
+		{
+			UpdateState();
+
+			//TODO: User stamina should not be a global variable. It should be stored within UnitHealth and managed within there.
+			if (Global.userStamina != 0)
+			{
+				Global.userStamina = Global.userStamina - 2;
+				if (Global.userStamina < 0)
+				{
+					Global.userStamina = 0;
+				}
+			}
+		}
+		else
+		{
+			stateDuration--;
+		}
+	}
 
     /// <summary>
     /// Handles the state change
     /// </summary>
     private void UpdateState()
     {
-        
         if (activeMoveIndex >= 4)
         {
-            
             randomMoveList = Random.Range(0, moveContainer.moves.Count);
             activeMoveList = moveContainer.moves[randomMoveList];
             activeMoveIndex = 0;
@@ -84,7 +86,6 @@ public class SimplestAI : MonoBehaviour
         }
 
         activeMoveIndex = activeMoveIndex + 1;
-
     }
 
     /// <summary>
@@ -102,6 +103,7 @@ public class SimplestAI : MonoBehaviour
 public class Global
 {
     public static bool switchStateBPM = false;
+	[System.Obsolete("Replaced with the Beat Event")]
     public static int counterBPM = 0;
     public static int userStamina = 0;
 }

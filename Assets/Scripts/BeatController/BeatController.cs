@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(RoundManager))]
 public class BeatController : MonoBehaviour
 {
+	public delegate void Beat();
+	public static event Beat BeatEvent = delegate { };
 	Coroutine beat;
 	public bool TriggerBeats
 	{
@@ -83,7 +85,7 @@ public class BeatController : MonoBehaviour
 			}
 			else if (TriggerBeats && beatReady)
 			{
-				Global.counterBPM += 1;
+				BeatEvent();
 				LastBeatTime = NextBeatTime;
 				NextBeatTime = LastBeatTime + BeatLength;
 			}
@@ -92,4 +94,9 @@ public class BeatController : MonoBehaviour
 			yield return null;
 		}
 	}
+}
+
+public enum BeatEventType
+{
+	Beat, Measure
 }

@@ -89,8 +89,8 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     public IEnumerator SetImmuneForNBeats(int beats)
     {
-
-        int currentBeat = Global.counterBPM;
+		//TODO: Rework based off of new beat event system.
+		int currentBeat = Global.counterBPM;
         int nextBeat = Global.counterBPM + beats;
 
         while ( currentBeat != nextBeat )
@@ -101,7 +101,6 @@ public class UnitManager : MonoBehaviour
         }
 
         unitHealth.Immune = false;
-
     }
 
 	/// <summary>

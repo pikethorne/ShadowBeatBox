@@ -5,9 +5,6 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     private BeatController beatController;
-	[System.Obsolete]
-	[SerializeField] private bool logState;
-	[System.Obsolete] private int lastBPM;
 
 	/// <summary>
 	/// Dictionary of values in order from best to worst. The order of these is critical to proper execution.
@@ -23,30 +20,6 @@ public class ScoreManager : MonoBehaviour
     void Start()
     {
         beatController = FindObjectOfType<BeatController>();
-	}
-
-	private void Update()
-	{
-		//Print the state every frame for testing/debug
-		if(logState)
-		{
-			PrintState();
-		}
-	}
-
-	/// <summary>
-	/// This method is temporary and should be removed later.
-	/// </summary>
-	[System.Obsolete]
-	private void PrintState()
-	{
-		float score = GetScore();
-		if (lastBPM != Global.counterBPM)
-		{
-			lastBPM = Global.counterBPM;
-			Debug.LogWarning("-- Beat Happened --");
-		}
-		Debug.LogFormat("Score: {0:F2} Rating: {1} {2}", score, GetHitTiming(score).ToString(), GetHitRating(score).ToString());
 	}
 
 	/// <summary>
