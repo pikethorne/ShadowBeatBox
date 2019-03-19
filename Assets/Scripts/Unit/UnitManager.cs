@@ -113,7 +113,14 @@ public class UnitManager : MonoBehaviour
 		{
 			GenerateTimingFeedback();
 			//Instantiate(Resources.Load<GameObject>("Generic/GoodText"), transform.position + textSpawnOffset, transform.rotation);
-			PlayRandomAudio(properties.goodHitSounds);
+			if (properties.goodHitSounds.Length != 0)
+			{
+				PlayRandomAudio(properties.goodHitSounds);
+			}
+			else
+			{
+				Debug.LogWarningFormat("{0} does not have good hit sounds.", properties.name);
+			}
 		}
 		unitHealth.DealDamage(1);
 	}
@@ -127,7 +134,14 @@ public class UnitManager : MonoBehaviour
 		{
 			GenerateTimingFeedback();
 			//Instantiate(Resources.Load<GameObject>("Generic/BadText"), transform.position + textSpawnOffset, transform.rotation);
-			PlayRandomAudio(properties.failedHitSounds);
+			if(properties.failedHitSounds.Length != 0)
+			{
+				PlayRandomAudio(properties.failedHitSounds);
+			}
+			else
+			{
+				Debug.LogWarningFormat("{0} does not have failed hit sounds.", properties.name);
+			}
 		}
 	}
 
