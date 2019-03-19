@@ -11,8 +11,6 @@ public class RoundManager : MonoBehaviour
 {
 	#region Fields
 	private int currentRound = 1;
-	private int numberOfRounds = 3;
-	private int victoryThreshold = 2;
 	private int redScore = 0;
 	private int greenScore = 0;
 	private string redName = "Defender", greenName = "Challenger";
@@ -23,8 +21,9 @@ public class RoundManager : MonoBehaviour
 	private AudioSource audioSource, scoreboardAudio;
 	private BeatController beatController;
 	private Animator animator, scoreboardAnimator;
+	[SerializeField] private FightSettings settings;
 	[SerializeField] private FightPlaylist playlist;
-	[SerializeField] private AudioClip whistle, bell, three, two, one, winner, loser, draw;
+	[SerializeField] private ArenaSoundset soundset;
 	#endregion
 
 	#region Getters/Setters
@@ -50,7 +49,7 @@ public class RoundManager : MonoBehaviour
 	}
 	public int GetMaxRounds()
 	{
-		return numberOfRounds;
+		return settings.maxNumberOfRounds;
 	}
 	public Sprite GetGreenIcon()
 	{
@@ -158,17 +157,17 @@ public class RoundManager : MonoBehaviour
 
 		yield return new WaitForSeconds(60 / beatController.BPM * (targetSong.beatsToWait - 6));
 
-		scoreboardAudio.PlayOneShot(three);
+		scoreboardAudio.PlayOneShot(soundset.countdownThree);
 		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
-		scoreboardAudio.PlayOneShot(two);
+		scoreboardAudio.PlayOneShot(soundset.countdownTwo);
 		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
-		scoreboardAudio.PlayOneShot(one);
+		scoreboardAudio.PlayOneShot(soundset.countdownOne);
 		yield return new WaitForSeconds(60 / beatController.BPM * 2);
 
 		scoreboardAnimator.Play("RoundBegin");
-		scoreboardAudio.PlayOneShot(bell);
+		scoreboardAudio.PlayOneShot(soundset.roundStart);
 		beatController.TriggerBeats = true;
 		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
 		{
@@ -185,7 +184,7 @@ public class RoundManager : MonoBehaviour
 		{
 			return SongTrigger.MatchStart;
 		}
-		else if(GetCurrentRound() == numberOfRounds)
+		else if(GetCurrentRound() == settings.maxNumberOfRounds)
 		{
 			return SongTrigger.FinalRound;
 		}
@@ -230,7 +229,7 @@ public class RoundManager : MonoBehaviour
 		{
 			unit.InitializeUnit();
 		}
-		scoreboardAudio.PlayOneShot(whistle, 1);
+		scoreboardAudio.PlayOneShot(soundset.roundEnd, 1);
 
 		//Awards score and plays animation based off of the winner.
 		switch (roundWinner)
@@ -248,7 +247,7 @@ public class RoundManager : MonoBehaviour
 		yield return new WaitForSeconds(1);
 
 		scoreboard.UpdateScoreboardText();
-		scoreboardAudio.PlayOneShot(whistle, 0.5f);
+		scoreboardAudio.PlayOneShot(soundset.scoreboardUpdate, 0.5f);
 
 		yield return new WaitForSeconds(4);
 
@@ -257,25 +256,25 @@ public class RoundManager : MonoBehaviour
 
 		//Match end conditions
 		{
-			if (redScore >= victoryThreshold && redScore > greenScore)
+			if (redScore >= settings.winningThreshold && redScore > greenScore)
 			{
 				//TODO: Red victory
 				scoreboardAnimator.Play("RedMatch");
-				scoreboardAudio.PlayOneShot(winner);
+				scoreboardAudio.PlayOneShot(soundset.redWinner);
 				yield break;
 			}
-			else if (greenScore >= victoryThreshold && greenScore > redScore)
+			else if (greenScore >= settings.winningThreshold && greenScore > redScore)
 			{
 				//TODO: Green victory
 				scoreboardAnimator.Play("GreenMatch");
-				scoreboardAudio.PlayOneShot(loser);
+				scoreboardAudio.PlayOneShot(soundset.greenWinner);
 				yield break;
 			}
-			else if (currentRound > numberOfRounds)
+			else if (currentRound > settings.maxNumberOfRounds)
 			{
 				//TODO: Draw, such as 1-1 in best of 2
 				scoreboardAnimator.Play("DrawMatch");
-				scoreboardAudio.PlayOneShot(draw);
+				scoreboardAudio.PlayOneShot(soundset.draw);
 				yield break;
 			}
 		}
