@@ -31,7 +31,20 @@ public class UnitHealth : MonoBehaviour
 			currentHealth = value;
 		}
 	}
+
 	public bool Immune
+	{
+		get;
+		set;
+	}
+
+	public bool ImmunePenalty
+	{
+		get;
+		set;
+	}
+
+	public int Exhaustion
 	{
 		get;
 		set;
@@ -55,10 +68,28 @@ public class UnitHealth : MonoBehaviour
 		set;
     }
 
-    /// <summary>
-    /// Decides if the player has been knocked out.
-    /// </summary>
-    private void CheckForKnockout()
+	void OnEnable()
+	{
+		BeatController.BeatEvent += DecreaseExhaustion;
+	}
+
+	void OnDisable()
+	{
+		BeatController.BeatEvent -= DecreaseExhaustion;
+	}
+
+	private void DecreaseExhaustion()
+	{
+		if (Exhaustion != 0 && !Immune && !ImmunePenalty)
+		{
+			Exhaustion = Mathf.Max(Exhaustion - 1, 0);
+		}
+	}
+
+	/// <summary>
+	/// Decides if the player has been knocked out.
+	/// </summary>
+	private void CheckForKnockout()
 	{
 		if(Health <= 0 && !KnockedDown)
 		{
