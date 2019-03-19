@@ -9,6 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(UnitHealth))]
 public class SimplestAI : MonoBehaviour
 {
+    MoveLoader parsedList;
     MoveContainer moveContainer;
     Animator animator;
     MoveList activeMoveList;
@@ -26,6 +27,7 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        parsedList = GetComponent<MoveLoader>();
         animator = GetComponent<Animator>();
         moveContainer = MoveContainer.Load(path);
     }

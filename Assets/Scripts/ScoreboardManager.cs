@@ -11,10 +11,8 @@ using TMPro;
 public class ScoreboardManager : MonoBehaviour
 {
 	//Red team is on left side of scoreboard while green is on right side.
-#pragma warning disable 0649
 	[SerializeField] private TextMeshProUGUI redName, greenName, score, roundNumber, timer, redHealth, greenHealth;
 	[SerializeField] private Image redFighterImage, greenFighterImage;
-#pragma warning restore 0649
 	private UnitHealth greenFighter, redFighter;
 	private RoundManager roundManager;
 

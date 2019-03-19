@@ -10,7 +10,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 #if UNITY_2018_3_OR_NEWER
-#pragma warning disable 0618
+#pragma warning disable CS0618
 #endif
 
 namespace Valve.VR
@@ -176,5 +176,5 @@ namespace Valve.VR
 }
 
 #if UNITY_2018_3_OR_NEWER
-#pragma warning restore 0618
+#pragma warning restore CS0618
 #endif
