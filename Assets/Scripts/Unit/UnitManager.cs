@@ -16,6 +16,7 @@ public class UnitManager : MonoBehaviour
 	[Tooltip("The offset from the origin of the object at which text should spawn.")]
 	[SerializeField] internal bool playFeedback = true;
 	[SerializeField] internal UnitProperties properties;
+	internal int beatsImmune;
 	internal AudioSource audioSource;
 	internal UnitHealth unitHealth;
 	internal ScoreManager scoreManager;
@@ -40,19 +41,42 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 
+	void OnEnable()
+	{
+		BeatController.BeatEvent += BeatController_BeatEvent;
+	}
+
+	void Ondisable()
+	{
+		BeatController.BeatEvent -= BeatController_BeatEvent;
+	}
+
+	private void BeatController_BeatEvent()
+	{
+		if(beatsImmune > 0)
+		{
+			unitHealth.ImmunePenalty = true;
+			beatsImmune--;
+		}
+		else
+		{
+			unitHealth.ImmunePenalty = false;
+		}
+	}
+
 	//Default unity method
 	private void OnTriggerEnter(Collider collision)
 	{
 		if (collision.gameObject.GetComponent<Glove>() && collision.gameObject.GetComponent<Glove>().Self != unitHealth) //Check if the incoming collider is a glove, and is not owned by this unit.
 		{
-			if (unitHealth.Immune) { return; } // Don't judge a hit if immune.
+			if (unitHealth.Immune || unitHealth.ImmunePenalty) { return; } // Don't judge a hit if immune.
 
 			Glove enemyGlove = collision.gameObject.GetComponent<Glove>();
 
 			if (enemyGlove.Velocity > properties.hitThreshold)
 			{
                 // Checks if User has punched 
-                if ( Global.userStamina < 4 )
+                if (unitHealth.Exhaustion < 3)
                 {
                     float score = scoreManager.GetScore();
                     ScoreManager.HitRating rating = scoreManager.GetHitRating(score);
@@ -60,21 +84,20 @@ public class UnitManager : MonoBehaviour
                     switch (rating)
                     {
                         case ScoreManager.HitRating.Miss:
-                            StartCoroutine(SetImmuneForNBeats(1));
-                            FailedHit(enemyGlove.Velocity, collision);
+							beatsImmune++;
+							FailedHit(enemyGlove.Velocity, collision);
                             break;
-
                         default:
-                            Global.userStamina++;
+							unitHealth.Exhaustion++;
                             SuccessfulHit(enemyGlove.Velocity, collision);
                             break;
                     }
                 }
                 else
                 {
-                    // If the user has punched too many times the Enemy becomes Immune as a punish
-                    StartCoroutine(SetImmuneForNBeats(2));
-                    Global.userStamina = 0;
+					// If the user has punched too many times the Enemy becomes Immune as a punish
+					beatsImmune += 3;
+					unitHealth.Exhaustion = 0;
                 }
 			}
 			else
@@ -84,24 +107,10 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 
-    /// <summary>
-    /// Used to make the Unit Immune for a beat for Misses or Stamina regen times
-    /// </summary>
-    public IEnumerator SetImmuneForNBeats(int beats)
-    {
-		//TODO: Rework based off of new beat event system.
-		int currentBeat = Global.counterBPM;
-        int nextBeat = Global.counterBPM + beats;
-
-        while ( currentBeat != nextBeat )
-        {
-            currentBeat = Global.counterBPM;
-            unitHealth.Immune = true;
-            yield return null;
-        }
-
-        unitHealth.Immune = false;
-    }
+	private void ImmunityBeatDecrease()
+	{
+		beatsImmune--;
+	}
 
 	/// <summary>
 	/// Triggered when a hit exceeds the required velocity.

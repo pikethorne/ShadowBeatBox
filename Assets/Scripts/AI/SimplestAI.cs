@@ -12,14 +12,14 @@ public class SimplestAI : MonoBehaviour
     MoveContainer moveContainer;
     Animator animator;
     MoveList activeMoveList;
+	UnitHealth unitHealth;
 
     public const string path = "MoveDatabase";
 
     int stateDuration = 0;
     int activeMoveIndex = 4;
 
-    public int randomMoveList;
-
+	public int randomMoveList;
 
     /// <summary>
     /// Start function, initializes state as well as starts state machine
@@ -28,6 +28,7 @@ public class SimplestAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         moveContainer = MoveContainer.Load(path);
+		unitHealth = GetComponent<UnitHealth>();
     }
 
 	private void OnEnable()
@@ -45,16 +46,6 @@ public class SimplestAI : MonoBehaviour
 		if(stateDuration <= 1)
 		{
 			UpdateState();
-
-			//TODO: User stamina should not be a global variable. It should be stored within UnitHealth and managed within there.
-			if (Global.userStamina != 0)
-			{
-				Global.userStamina = Global.userStamina - 2;
-				if (Global.userStamina < 0)
-				{
-					Global.userStamina = 0;
-				}
-			}
 		}
 		else
 		{
@@ -103,5 +94,6 @@ public class Global
     public static bool switchStateBPM = false;
 	[System.Obsolete("Replaced with the Beat Event")]
     public static int counterBPM = 0;
+	[System.Obsolete]
     public static int userStamina = 0;
 }
