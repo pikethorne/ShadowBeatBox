@@ -12,9 +12,6 @@ public class UnitHealth : MonoBehaviour
 	private float currentHealth;
 	[SerializeField] private TMPro.TextMeshPro healthText;
 	private Animator animator;
-    /// <summary>
-    /// Number of times they have been knocked unconcious.
-    /// </summary>
     private int timesKnockedDown = 0;
 	private bool blocking;
 	private static readonly int knockdownLimit = 3;
@@ -104,8 +101,47 @@ public class UnitHealth : MonoBehaviour
 			}
 			else //Player
 			{
-				IsUnconcious = true; //TODO: Until we implement player revives, the player will just not get up.
+				KnockedDown = true;
+				Immune = true;
+				timesKnockedDown++;
+
+				if (timesKnockedDown > 3)
+				{
+					foreach (Collider collider in GetComponents<Collider>())
+					{
+						collider.enabled = false;
+					}
+
+					GameObject playerRevive = Instantiate(Resources.Load<GameObject>("PlayerRevive"), transform.position + (0.5f * transform.forward), transform.rotation);
+					PlayerRevive reviveComponent = playerRevive.GetComponent<PlayerRevive>();
+					reviveComponent.SetTargetPlayer(this);
+					reviveComponent.StartCoroutine("ReviveTimeout", properties.reviveDuration);
+				}
+				else
+				{
+					PlayerFailedGetUp();
+				}
 			}
+		}
+	}
+
+	public void PlayerGetUp()
+	{
+		KnockedDown = false;
+		Immune = false;
+		foreach (Collider collider in GetComponents<Collider>())
+		{
+			collider.enabled = true;
+		}
+		Health = properties.maxHealth * properties.getUpHealthRecovered;
+	}
+
+	public void PlayerFailedGetUp()
+	{
+		IsUnconcious = true;
+		foreach (Collider collider in GetComponents<Collider>())
+		{
+			collider.enabled = true;
 		}
 	}
 
@@ -163,6 +199,8 @@ public class UnitHealth : MonoBehaviour
 		IsUnconcious = true;
 		animator.Play("KnockdownGetUpAttempt");
 		yield return new WaitForSeconds(1);
+		animator.Play("KnockdownGetUpFail");
+		yield return new WaitForSeconds(2.5f);
 		foreach (Collider collider in childColliders)
 		{
 			collider.enabled = true;
@@ -198,6 +236,10 @@ public class UnitHealth : MonoBehaviour
 		IsUnconcious = false;
 		KnockedDown = false;
 		timesKnockedDown = 0;
+		foreach (Collider collider in GetComponents<Collider>())
+		{
+			collider.enabled = true;
+		}
 	}
 
     /// <summary>

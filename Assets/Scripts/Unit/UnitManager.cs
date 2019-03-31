@@ -46,7 +46,7 @@ public class UnitManager : MonoBehaviour
 		BeatController.BeatEvent += BeatController_BeatEvent;
 	}
 
-	void Ondisable()
+	void OnDisable()
 	{
 		BeatController.BeatEvent -= BeatController_BeatEvent;
 	}
@@ -67,13 +67,22 @@ public class UnitManager : MonoBehaviour
 	//Default unity method
 	private void OnTriggerEnter(Collider collision)
 	{
-		if (collision.gameObject.GetComponent<Glove>() && collision.gameObject.GetComponent<Glove>().Self != unitHealth) //Check if the incoming collider is a glove, and is not owned by this unit.
+		//Check if the incoming collider is a glove, and is not owned by this unit.
+		if (collision.gameObject.GetComponent<Glove>() && collision.gameObject.GetComponent<Glove>().Self != unitHealth) 
 		{
-			if (unitHealth.Immune || unitHealth.ImmunePenalty) { return; } // Don't judge a hit if immune.
+			// Don't judge a hit if immune.
+			if (unitHealth.Immune || unitHealth.ImmunePenalty)
+			{
+				return;
+			}
 
 			Glove enemyGlove = collision.gameObject.GetComponent<Glove>();
 
-			if (enemyGlove.Velocity > properties.hitThreshold)
+			if (enemyGlove.Velocity <= properties.hitThreshold)
+			{
+				FailedHit(enemyGlove.Velocity, collision);
+			}
+			else
 			{
                 // Checks if User has punched 
                 if (unitHealth.Exhaustion < 3)
@@ -100,16 +109,7 @@ public class UnitManager : MonoBehaviour
 					unitHealth.Exhaustion = 0;
                 }
 			}
-			else
-			{
-				FailedHit(enemyGlove.Velocity, collision);
-			}
 		}
-	}
-
-	private void ImmunityBeatDecrease()
-	{
-		beatsImmune--;
 	}
 
 	/// <summary>
@@ -157,12 +157,11 @@ public class UnitManager : MonoBehaviour
 	{
 		GameObject timingText = Instantiate(Resources.Load<GameObject>("Generic/TimingText"), transform.position + textSpawnOffset, transform.rotation);
 		TextMeshPro textMesh = timingText.GetComponent<TextMeshPro>();
-		float score = scoreManager.GetScore();
-		ScoreManager.HitRating rating = scoreManager.GetHitRating(score);
+		ScoreManager.HitRating rating = scoreManager.GetHitRating(scoreManager.GetScore());
 		switch(rating)
 		{
 			case ScoreManager.HitRating.Miss:
-				textMesh.SetText("Too " + scoreManager.GetHitTiming(score).ToString() + "!");
+				textMesh.SetText("Too " + rating.ToString() + "!");
 				break;
 			default:
 				textMesh.SetText(rating.ToString() + "!");

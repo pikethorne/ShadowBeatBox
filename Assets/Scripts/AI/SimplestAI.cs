@@ -43,7 +43,12 @@ public class SimplestAI : MonoBehaviour
 
 	private void BeatController_BeatEvent()
 	{
-		if(stateDuration <= 1)
+		if(unitHealth.KnockedDown)
+		{
+			return;
+		}
+
+		if (stateDuration <= 1)
 		{
 			UpdateState();
 		}
@@ -82,10 +87,7 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void EnemyActions(string animationTransition)
     {
-		if(!GetComponent<UnitHealth>().KnockedDown)
-		{
-			animator.Play(animationTransition, 0, 0f);
-		}
+		animator.Play(animationTransition, 0, 0f);
 	}
 }
 

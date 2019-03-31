@@ -37,8 +37,8 @@ public class ScoreboardManager : MonoBehaviour
 		// For now it just displays the amount of time since the scene started running.
 		TimeSpan time = TimeSpan.FromSeconds(Time.time);
 		timer.text = string.Format("{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
-		redHealth.text = "HP:" + Mathf.FloorToInt(redFighter.Health).ToString();
-		greenHealth.text = "HP:" + Mathf.FloorToInt(greenFighter.Health).ToString();
+		redHealth.text = "HP:" + redFighter.Health.ToString("N1");
+		greenHealth.text = "HP:" + greenFighter.Health.ToString("N1");
 	}
 
 	/// <summary>

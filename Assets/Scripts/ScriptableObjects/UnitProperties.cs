@@ -17,6 +17,10 @@ public class UnitProperties : ScriptableObject
 	[Range(0f, 1f)]
 	[Tooltip("Probability that they will stand back up after being knocked down. (0-100%)")]
 	public float getUpChance = 0.35f;
+	[Tooltip("Amount of time they have to revive their character")]
+	public float reviveDuration = 8;
+	[Tooltip("Number of good hits required for a player character to get up")]
+	public int hitsRequiredToRevive = 4;
 	[Range(0f, 1f)]
 	[Tooltip("When recovering from a knockdown, percentage of health they will recover. (0-100%)")]
 	public float getUpHealthRecovered = 0.5f;
