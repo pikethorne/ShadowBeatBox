@@ -17,6 +17,7 @@ public class UnitStatus : MonoBehaviour
 	private bool blocking;
 	private static readonly int knockdownLimit = 3;
 	private UnitProperties properties;
+	List<Collider> gloveColliders;
 	#endregion
 
 	#region Properties
@@ -99,6 +100,7 @@ public class UnitStatus : MonoBehaviour
 		properties = GetComponent<UnitManager>().GetProperties();
 		InitializeUnit();
 		animator = GetComponent<Animator>();
+		gloveColliders = new List<Collider>(GetComponentsInChildren<Collider>());
 	}
 
 	void OnEnable()
@@ -187,9 +189,7 @@ public class UnitStatus : MonoBehaviour
 	#region AI KO Methods
 	IEnumerator AIKnockdown()
 	{
-		//Disables colliders preventing accidental hits
-		List<Collider> childColliders = new List<Collider>(GetComponentsInChildren<Collider>());
-		foreach(Collider collider in childColliders)
+		foreach(Collider collider in gloveColliders)
 		{
 			collider.enabled = false;
 		}
@@ -216,7 +216,7 @@ public class UnitStatus : MonoBehaviour
 		//If they did not fail to get up and were predetermined to get up, they will get up now.
 		else if (willGetUp == true) 
 		{
-			SuccessfulAIGetUp(childColliders);
+			SuccessfulAIGetUp(gloveColliders);
 			yield break;
 		}
 
@@ -228,7 +228,7 @@ public class UnitStatus : MonoBehaviour
 		//Second attempt to get up, if they were determined to get up before they will now. Otherwise they will fail to get up.
 		if (willGetUp == true)
 		{
-			SuccessfulAIGetUp(childColliders);
+			SuccessfulAIGetUp(gloveColliders);
 			yield break;
 		}
 		else
@@ -244,7 +244,7 @@ public class UnitStatus : MonoBehaviour
 		yield return new WaitForSeconds(1);
 		animator.Play("KnockdownGetUpFail");
 		yield return new WaitForSeconds(2.5f);
-		foreach (Collider collider in childColliders)
+		foreach (Collider collider in gloveColliders)
 		{
 			collider.enabled = true;
 		}
@@ -252,9 +252,9 @@ public class UnitStatus : MonoBehaviour
 		yield break;
 	}
 
-	private void SuccessfulAIGetUp(List<Collider> childColliders)
+	private void SuccessfulAIGetUp(List<Collider> colliders)
 	{
-		foreach (Collider collider in childColliders)
+		foreach (Collider collider in colliders)
 		{
 			collider.enabled = true;
 		}

@@ -202,17 +202,12 @@ public class RoundManager : MonoBehaviour
 		else if (!RedActive) StartCoroutine(EndRound(BoxingTeams.green));
 	}
 
-	//Called before Start().
-	private void Awake()
+	private void Start()
 	{
 		animator = GetComponent<Animator>();
 		beatController = GetComponent<BeatController>();
 		audioSource = GetComponent<AudioSource>();
 		ScanSceneForBoxers();
-	}
-
-	private void Start()
-	{
 		scoreboardAudio = scoreboard.GetComponent<AudioSource>();
 		scoreboardAnimator = scoreboard.GetComponent<Animator>();
 		StartCoroutine(StartRound());
@@ -258,23 +253,23 @@ public class RoundManager : MonoBehaviour
 		{
 			if (redScore >= settings.winningThreshold && redScore > greenScore)
 			{
-				//TODO: Red victory
 				scoreboardAnimator.Play("RedMatch");
 				scoreboardAudio.PlayOneShot(soundset.redWinner);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 			else if (greenScore >= settings.winningThreshold && greenScore > redScore)
 			{
-				//TODO: Green victory
 				scoreboardAnimator.Play("GreenMatch");
 				scoreboardAudio.PlayOneShot(soundset.greenWinner);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 			else if (currentRound > settings.maxNumberOfRounds)
 			{
-				//TODO: Draw, such as 1-1 in best of 2
 				scoreboardAnimator.Play("DrawMatch");
 				scoreboardAudio.PlayOneShot(soundset.draw);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 		}

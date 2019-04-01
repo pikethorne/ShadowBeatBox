@@ -10,9 +10,13 @@ public class Global
 	/// <param name="clips">The array of sound files to trigger from</param>
 	public static void PlayRandomAudio(AudioClip[] clips, AudioSource audioSource)
 	{
-		if (clips.Length != 0)
+		try
 		{
 			audioSource.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
+		}
+		catch
+		{
+			return;
 		}
 	}
 }

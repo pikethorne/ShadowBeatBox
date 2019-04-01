@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerRevive : MonoBehaviour
 {
@@ -22,6 +23,29 @@ public class PlayerRevive : MonoBehaviour
 	public void SetHitsRequired(int value)
 	{
 		goodHitsRequired = value;
+	}
+
+	private void OnEnable()
+	{
+		BeatController.BeatEvent += BeatController_BeatEvent;
+	}
+
+	private void OnDisable()
+	{
+		BeatController.BeatEvent -= BeatController_BeatEvent;
+	}
+
+	private void BeatController_BeatEvent()
+	{
+		List<Transform> children = new List<Transform>();
+		for(int i = 0; i < transform.childCount; i++)
+		{
+			children.Add(transform.GetChild(i));
+		}
+		foreach(Transform trans in children)
+		{
+			trans.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.2f, 1, 0);
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
