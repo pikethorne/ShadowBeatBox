@@ -15,7 +15,7 @@ public class ScoreboardManager : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI redName, greenName, score, roundNumber, timer, redHealth, greenHealth;
 	[SerializeField] private Image redFighterImage, greenFighterImage;
 #pragma warning restore 0649
-	private UnitHealth greenFighter, redFighter;
+	private UnitStatus greenFighter, redFighter;
 	private RoundManager roundManager;
 
 	private void Awake()

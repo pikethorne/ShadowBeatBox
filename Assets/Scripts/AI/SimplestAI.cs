@@ -6,13 +6,13 @@ using UnityEngine;
 /// AI state machine for Shadowboxing
 /// Uses enum for state machines along with switch statement
 /// </summary>
-[RequireComponent(typeof(UnitHealth))]
+[RequireComponent(typeof(UnitStatus))]
 public class SimplestAI : MonoBehaviour
 {
     MoveContainer moveContainer;
     Animator animator;
     MoveList activeMoveList;
-	UnitHealth unitHealth;
+	UnitStatus unitHealth;
 
     public const string path = "MoveDatabase";
 
@@ -28,7 +28,7 @@ public class SimplestAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         moveContainer = MoveContainer.Load(path);
-		unitHealth = GetComponent<UnitHealth>();
+		unitHealth = GetComponent<UnitStatus>();
     }
 
 	private void OnEnable()
@@ -89,13 +89,4 @@ public class SimplestAI : MonoBehaviour
     {
 		animator.Play(animationTransition, 0, 0f);
 	}
-}
-
-public class Global
-{
-    public static bool switchStateBPM = false;
-	[System.Obsolete("Replaced with the Beat Event")]
-    public static int counterBPM = 0;
-	[System.Obsolete]
-    public static int userStamina = 0;
 }

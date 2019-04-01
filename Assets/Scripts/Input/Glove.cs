@@ -15,7 +15,7 @@ public class Glove : MonoBehaviour
 	private SteamVR_Input_Sources thisHand;
 	private bool isSteamVRPlayer = false;
 	private float nextBlockTime;
-	public UnitHealth Self
+	public UnitStatus Self
 	{
 		get; set;
 	}
@@ -102,7 +102,7 @@ public class Glove : MonoBehaviour
 			thisHand = GetComponent<Hand>().handType;
 			isSteamVRPlayer = true;
 		}
-		Self = GetComponentInParent<UnitHealth>();
+		Self = GetComponentInParent<UnitStatus>();
 	}
 
 	private void Update ()
@@ -146,7 +146,7 @@ public class Glove : MonoBehaviour
 	{
 		PlayRandomAudio(goodBlock);
 		Instantiate(blockParticle, transform);
-		transform.root.GetComponentInChildren<UnitHealth>().StartCoroutine(transform.root.GetComponentInChildren<UnitHealth>().Block(0.5f));
+		transform.root.GetComponentInChildren<UnitStatus>().StartCoroutine(transform.root.GetComponentInChildren<UnitStatus>().Block(0.5f));
 		nextBlockTime = Time.time + blockCooldown;
 		
 	}
