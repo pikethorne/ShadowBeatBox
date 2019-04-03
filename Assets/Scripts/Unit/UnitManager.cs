@@ -20,6 +20,7 @@ public class UnitManager : MonoBehaviour
 	internal AudioSource audioSource;
 	internal UnitStatus unitHealth;
 	internal ScoreManager scoreManager;
+    internal Transform cameraTransform;
 	#endregion
 
 	private void Start()
@@ -27,11 +28,28 @@ public class UnitManager : MonoBehaviour
 		unitHealth = GetComponent<UnitStatus>();
 		audioSource = GetComponent<AudioSource>();
 		scoreManager = FindObjectOfType<ScoreManager>();
+        cameraTransform = FindObjectOfType<Camera>().transform;
 		if (!GetComponent<Rigidbody>() || !GetComponentInChildren<Collider>())
 		{
 			Debug.LogWarning("This unit does not have a rigidbody or a collider. This will cause punches to not register.");
 		}
 	}
+    
+    private void Update()
+    {
+        // TODO: Add Reference to Winding Up Punch~
+        // TODO: Also, I'm bad at doing LERPing so it just instantly looks for the most part.
+        if (!unitHealth.KnockedDown && !unitHealth.IsUnconcious)
+        {
+            transform.position = Vector3.MoveTowards( transform.position, new Vector3( transform.position.x, Mathf.Max(0.675f, cameraTransform.position.y - 0.5f), transform.position.z ), 0.01f );
+
+            transform.LookAt( cameraTransform );
+            transform.localEulerAngles = new Vector3( 0, transform.localEulerAngles.y, 0);
+            transform.Rotate( new Vector3( 0, 180, 0 ) );
+
+        }
+        
+    }
 
 	void OnEnable()
 	{
