@@ -5,6 +5,7 @@ using Valve.VR.InteractionSystem;
 /// <summary>
 /// Responsible for managing inputs and gameplay of the player's glove.
 /// </summary>
+[RequireComponent(typeof(AudioSource))]
 public class Glove : MonoBehaviour
 {
 	#region Fields
@@ -15,7 +16,7 @@ public class Glove : MonoBehaviour
 	private SteamVR_Input_Sources thisHand;
 	private bool isSteamVRPlayer = false;
 	private float nextBlockTime;
-	public UnitHealth Self
+	public UnitStatus Self
 	{
 		get; set;
 	}
@@ -42,35 +43,7 @@ public class Glove : MonoBehaviour
 			return Mathf.Abs(displacement);
 		}
 	}
-	/// <summary>
-	/// Returns the reference to the audio source.
-	/// </summary>
-	public AudioSource Audio
-	{
-		get
-		{
-			//Returns the reference to the audio source if it exists
-			if (audioSource)
-			{
-				return audioSource;
-			}
-			//If there isn't a reference to the audio source but it exists, creates it and returns it.
-			else if (!audioSource && GetComponent<AudioSource>())
-			{
-				return audioSource = GetComponent<AudioSource>();
-			}
-			//If there isn't an audio source at all it creates one. This is just a fallback and should not be used.
-			else
-			{
-				Debug.LogWarning(gameObject.name + " doesn't have an audio source! Generating one with default settings. To prevent this add an audio source when the game is not running.");
-				return audioSource = gameObject.AddComponent<AudioSource>();
-			}
-		}
-		set
-		{
-			audioSource = value;
-		}
-	}
+
 	/// <summary>
 	/// Returns true if the current time exceeds the time for the next potential block.
 	/// </summary>
@@ -82,6 +55,7 @@ public class Glove : MonoBehaviour
 			return false;
 		}
 	}
+
 	/// <summary>
 	/// The difference in time between the next available usage of block and the current time.
 	/// </summary>
@@ -102,7 +76,12 @@ public class Glove : MonoBehaviour
 			thisHand = GetComponent<Hand>().handType;
 			isSteamVRPlayer = true;
 		}
-		Self = GetComponentInParent<UnitHealth>();
+		Self = transform.root.GetComponentInChildren<UnitStatus>();
+	}
+
+	private void Start()
+	{
+		audioSource = GetComponent<AudioSource>();
 	}
 
 	private void Update ()
@@ -144,9 +123,9 @@ public class Glove : MonoBehaviour
 	[ContextMenu(itemName: "Trigger Block")]
 	public void TriggerBlock()
 	{
-		PlayRandomAudio(goodBlock);
+		Global.PlayRandomAudio(goodBlock, audioSource);
 		Instantiate(blockParticle, transform);
-		transform.root.GetComponentInChildren<UnitHealth>().StartCoroutine(transform.root.GetComponentInChildren<UnitHealth>().Block(0.5f));
+		transform.root.GetComponentInChildren<UnitStatus>().StartCoroutine(transform.root.GetComponentInChildren<UnitStatus>().Block(0.5f));
 		nextBlockTime = Time.time + blockCooldown;
 		
 	}
@@ -156,22 +135,12 @@ public class Glove : MonoBehaviour
 	/// </summary>
 	private void FailedBlock()
 	{
-		PlayRandomAudio(badBlock);
+		Global.PlayRandomAudio(badBlock, audioSource);
 		GameObject bad = Instantiate(cooldownText, gameObject.transform.position, gameObject.transform.rotation);
 		if(bad.GetComponent<TMPro.TextMeshPro>())
 		{
 			bad.GetComponent<TMPro.TextMeshPro>().text = BlockCooldown.ToString("0.0") + "s";
 		}
-	}
-
-	//TODO: If we continue to use this method I may add it to a namespace.
-	/// <summary>
-	/// Plays a random audio from the array of sound files.
-	/// </summary>
-	/// <param name="clips">The array of sound files to trigger from</param>
-	private void PlayRandomAudio(AudioClip[] clips)
-	{
-		Audio.PlayOneShot(clips[UnityEngine.Random.Range(0, clips.Length)]);
 	}
 	#endregion
 }

@@ -16,8 +16,10 @@ MonoBehaviour:
   description: A real professional
   icon: {fileID: 21300000, guid: 2e1177f129e370a41be6e95c658d9ebc, type: 3}
   getUpChance: 0.35
+  reviveDuration: 8
+  hitsRequiredToRevive: 4
   getUpHealthRecovered: 0.5
-  maxHealth: 100
+  maxHealth: 15
   hitThreshold: 0
   goodHitSounds: []
   failedHitSounds: []

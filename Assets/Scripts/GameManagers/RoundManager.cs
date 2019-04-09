@@ -15,8 +15,8 @@ public class RoundManager : MonoBehaviour
 	private int greenScore = 0;
 	private string redName = "Defender", greenName = "Challenger";
 	private Sprite redIcon, greenIcon;
-	private List<UnitHealth> redTeam = new List<UnitHealth>();
-	private List<UnitHealth> greenTeam = new List<UnitHealth>();
+	private List<UnitStatus> redTeam = new List<UnitStatus>();
+	private List<UnitStatus> greenTeam = new List<UnitStatus>();
 	private ScoreboardManager scoreboard;
 	private AudioSource audioSource, scoreboardAudio;
 	private BeatController beatController;
@@ -59,11 +59,11 @@ public class RoundManager : MonoBehaviour
 	{
 		return redIcon;
 	}
-	public UnitHealth GetGreenFighter()
+	public UnitStatus GetGreenFighter()
 	{
 		return greenTeam[0];
 	}
-	public UnitHealth GetRedFighter()
+	public UnitStatus GetRedFighter()
 	{
 		return redTeam[0];
 	}
@@ -71,7 +71,7 @@ public class RoundManager : MonoBehaviour
 	{
 		get
 		{
-			foreach (UnitHealth boxer in redTeam)
+			foreach (UnitStatus boxer in redTeam)
 			{
 				if (!boxer.IsUnconcious)
 				{
@@ -85,7 +85,7 @@ public class RoundManager : MonoBehaviour
 	{
 		get
 		{
-			foreach (UnitHealth boxer in greenTeam)
+			foreach (UnitStatus boxer in greenTeam)
 			{
 				if (!boxer.IsUnconcious)
 				{
@@ -103,7 +103,7 @@ public class RoundManager : MonoBehaviour
 	public void ScanSceneForBoxers()
 	{
 		//TODO: As of right now it only support one unit per team, if we change the logic there can be multiple fighters on a team.
-		if(FindObjectsOfType<UnitHealth>().Length < 2)
+		if(FindObjectsOfType<UnitStatus>().Length < 2)
 		{
 			Debug.LogError("There is not enough Unit Health components present in the scene to make rounds work. Destroying the Round Manager to prevent chaos.");
 			Destroy(this);
@@ -111,7 +111,7 @@ public class RoundManager : MonoBehaviour
 		redTeam.Clear();
 		greenTeam.Clear();
 		int i = 1;
-		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		foreach (UnitStatus unit in FindObjectsOfType<UnitStatus>())
 		{
 			switch(i)
 			{
@@ -146,7 +146,7 @@ public class RoundManager : MonoBehaviour
 		audioSource.clip = targetSong.soundFile;
 		audioSource.Play();
 
-		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		foreach (UnitStatus unit in FindObjectsOfType<UnitStatus>())
 		{
 			unit.InitializeUnit();
 		}
@@ -169,7 +169,7 @@ public class RoundManager : MonoBehaviour
 		scoreboardAnimator.Play("RoundBegin");
 		scoreboardAudio.PlayOneShot(soundset.roundStart);
 		beatController.TriggerBeats = true;
-		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		foreach (UnitStatus unit in FindObjectsOfType<UnitStatus>())
 		{
 			unit.Immune = false;
 		}
@@ -202,17 +202,12 @@ public class RoundManager : MonoBehaviour
 		else if (!RedActive) StartCoroutine(EndRound(BoxingTeams.green));
 	}
 
-	//Called before Start().
-	private void Awake()
+	private void Start()
 	{
 		animator = GetComponent<Animator>();
 		beatController = GetComponent<BeatController>();
 		audioSource = GetComponent<AudioSource>();
 		ScanSceneForBoxers();
-	}
-
-	private void Start()
-	{
 		scoreboardAudio = scoreboard.GetComponent<AudioSource>();
 		scoreboardAnimator = scoreboard.GetComponent<Animator>();
 		StartCoroutine(StartRound());
@@ -225,7 +220,7 @@ public class RoundManager : MonoBehaviour
 	{
 		animator.Play("SongFadeOut");
 		beatController.StopSong();
-		foreach (UnitHealth unit in FindObjectsOfType<UnitHealth>())
+		foreach (UnitStatus unit in FindObjectsOfType<UnitStatus>())
 		{
 			unit.InitializeUnit();
 		}
@@ -258,23 +253,23 @@ public class RoundManager : MonoBehaviour
 		{
 			if (redScore >= settings.winningThreshold && redScore > greenScore)
 			{
-				//TODO: Red victory
 				scoreboardAnimator.Play("RedMatch");
 				scoreboardAudio.PlayOneShot(soundset.redWinner);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 			else if (greenScore >= settings.winningThreshold && greenScore > redScore)
 			{
-				//TODO: Green victory
 				scoreboardAnimator.Play("GreenMatch");
 				scoreboardAudio.PlayOneShot(soundset.greenWinner);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 			else if (currentRound > settings.maxNumberOfRounds)
 			{
-				//TODO: Draw, such as 1-1 in best of 2
 				scoreboardAnimator.Play("DrawMatch");
 				scoreboardAudio.PlayOneShot(soundset.draw);
+				Instantiate(Resources.Load<GameObject>("ReturnToMenu"), new Vector3(0, 1, 1 / 4), Quaternion.identity);
 				yield break;
 			}
 		}

@@ -7,6 +7,7 @@ public class BeatController : MonoBehaviour
 {
 	public delegate void Beat();
 	public static event Beat BeatEvent = delegate { };
+	public static BeatController instance;
 	Coroutine beat;
 	public bool TriggerBeats
 	{
@@ -43,13 +44,14 @@ public class BeatController : MonoBehaviour
 		private set;
 	}
 
+	private void Start()
+	{
+		instance = this;
+	}
 
 	/// <summary>
 	/// Method that Creates and Runs a Beatlist for 8 beats a measure, then starts the AudioSource Song.
 	/// </summary>
-	/// <param name="numerator">Optional</param>
-	/// <param name="denominator">Optional</param>
-	/// <param name="newBPM">Optional</param>
 	public void StartSong(float newBPM = 0)
     {
         if (newBPM != 0)
