@@ -18,6 +18,7 @@ public class UnitStatus : MonoBehaviour
 	private static readonly int knockdownLimit = 3;
 	private UnitProperties properties;
 	List<Collider> gloveColliders;
+	List<Glove> gloves;
 	#endregion
 
 	#region Properties
@@ -101,6 +102,7 @@ public class UnitStatus : MonoBehaviour
 		InitializeUnit();
 		animator = GetComponent<Animator>();
 		gloveColliders = new List<Collider>(GetComponentsInChildren<Collider>());
+		gloves = new List<Glove>(GetComponentsInChildren<Glove>());
 	}
 
 	void OnEnable()
@@ -147,6 +149,11 @@ public class UnitStatus : MonoBehaviour
 	#region Player KO Methods
 	private void PlayerKnockdown()
 	{
+		foreach(Glove glove in gloves)
+		{
+			glove.CombatEnabled = false;
+		}
+
 		if (timesKnockedDown <= 3)
 		{
 			foreach (Collider collider in GetComponents<Collider>())
@@ -167,6 +174,10 @@ public class UnitStatus : MonoBehaviour
 
 	public void PlayerGetUp()
 	{
+		foreach (Glove glove in gloves)
+		{
+			glove.CombatEnabled = true;
+		}
 		KnockedDown = false;
 		Immune = false;
 		foreach (Collider collider in GetComponents<Collider>())
@@ -178,6 +189,10 @@ public class UnitStatus : MonoBehaviour
 
 	public void PlayerFailedGetUp()
 	{
+		foreach (Glove glove in gloves)
+		{
+			glove.CombatEnabled = true;
+		}
 		IsUnconcious = true;
 		foreach (Collider collider in GetComponents<Collider>())
 		{

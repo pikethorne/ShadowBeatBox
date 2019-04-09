@@ -50,14 +50,16 @@ public class PlayerRevive : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		Glove incomingGlove;
 		//If the trigger enter was a glove and the attacking glove is the unit trying to be revived.
-		if (other.gameObject.GetComponent<Glove>() && other.transform.root.GetComponentInChildren<UnitStatus>() == targetPlayer)
+		if ((incomingGlove = other.gameObject.GetComponent<Glove>()) && other.transform.root.GetComponentInChildren<UnitStatus>() == targetPlayer)
 		{
 			//If the hit was acceptable timing, increment the good hits. Otherwise decrease it to discourage spamming.
 			if (scoreManager.GetHitRating() != ScoreManager.HitRating.Miss)
 			{
 				goodHits++;
 				Debug.LogFormat("Good {0}/{1}", goodHits, goodHitsRequired);
+				incomingGlove.GoodPunch();
 			}
 			else
 			{

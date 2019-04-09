@@ -143,6 +143,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8d7b04b3a0a25b14fb7d59d887f502e6, type: 3}
   badBlock:
   - {fileID: 8300000, guid: f02a388fb2570de4988c1c37c3ff36bc, type: 3}
+  hitSound: {fileID: 8300000, guid: 81da531dbc2cb744d9981df035d85480, type: 3}
   blockParticle: {fileID: 1374505642228938, guid: 3d8e16d01728f834890a783105fd01c7,
     type: 3}
   cooldownText: {fileID: 1153389722537190, guid: 7ced558663edc254b81197540d3aa6b0,
@@ -584,6 +585,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8d7b04b3a0a25b14fb7d59d887f502e6, type: 3}
   badBlock:
   - {fileID: 8300000, guid: f02a388fb2570de4988c1c37c3ff36bc, type: 3}
+  hitSound: {fileID: 8300000, guid: 81da531dbc2cb744d9981df035d85480, type: 3}
   blockParticle: {fileID: 1374505642228938, guid: 3d8e16d01728f834890a783105fd01c7,
     type: 3}
   cooldownText: {fileID: 1153389722537190, guid: 7ced558663edc254b81197540d3aa6b0,
@@ -762,7 +764,7 @@ GameObject:
   - component: {fileID: 20000014031267948}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -874,7 +876,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!82 &8615000388872087967
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1008,7 +1010,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.25
+  m_Radius: 0.025
   m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

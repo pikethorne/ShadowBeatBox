@@ -18,8 +18,10 @@ public class SimplestAI : MonoBehaviour
 
     int stateDuration = 0;
     int activeMoveIndex = 4;
-
+	internal Transform cameraTransform;
 	public int randomMoveList;
+
+	public bool trackingPlayer = true;
 
     /// <summary>
     /// Start function, initializes state as well as starts state machine
@@ -29,7 +31,18 @@ public class SimplestAI : MonoBehaviour
         animator = GetComponent<Animator>();
         moveContainer = MoveContainer.Load(path);
 		unitHealth = GetComponent<UnitStatus>();
-    }
+		cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+	}
+
+	private void FixedUpdate()
+	{
+		if (!unitHealth.KnockedDown && trackingPlayer)
+		{
+			transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, Mathf.Max(0.675f, cameraTransform.position.y - 0.5f), transform.position.z), 0.01f);
+			transform.LookAt(cameraTransform);
+			transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+		}
+	}
 
 	private void OnEnable()
 	{
@@ -56,6 +69,11 @@ public class SimplestAI : MonoBehaviour
 		{
 			stateDuration--;
 		}
+	}
+
+	public void SetTracking(int tracking)
+	{
+		trackingPlayer = tracking != 0;
 	}
 
     /// <summary>

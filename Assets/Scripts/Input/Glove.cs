@@ -25,6 +25,7 @@ public class Glove : MonoBehaviour
 	[Header("Audio")]
 	[SerializeField] private AudioClip[] goodBlock;
 	[SerializeField] private AudioClip[] badBlock;
+	[SerializeField] private AudioClip hitSound;
 	[Header("Prefabs")]
 	[SerializeField] private GameObject blockParticle;
 	[SerializeField] private GameObject cooldownText;
@@ -66,6 +67,8 @@ public class Glove : MonoBehaviour
 			return nextBlockTime - Time.time;
 		}
 	}
+
+	public bool CombatEnabled { get; set; }
 	#endregion
 
 	#region Methods
@@ -77,6 +80,7 @@ public class Glove : MonoBehaviour
 			isSteamVRPlayer = true;
 		}
 		Self = transform.root.GetComponentInChildren<UnitStatus>();
+		CombatEnabled = true;
 	}
 
 	private void Start()
@@ -91,6 +95,15 @@ public class Glove : MonoBehaviour
 		{
 			CheckBlock();
 		}
+	}
+
+	public void GoodPunch()
+	{
+		if(isSteamVRPlayer)
+		{
+			Instantiate(Resources.Load<GameObject>("Effects/StarEffect"), transform.position, transform.rotation);
+		}
+		audioSource.PlayOneShot(hitSound);
 	}
 
 	/// <summary>
