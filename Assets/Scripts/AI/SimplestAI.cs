@@ -105,6 +105,14 @@ public class SimplestAI : MonoBehaviour
     /// </summary>
     private void EnemyActions(string animationTransition)
     {
+        if ( animationTransition == "RightJabTell" || animationTransition == "RightJab" )
+        {
+            trackingPlayer = false;
+        }
+        else
+        {
+            trackingPlayer = true;
+        }
 		animator.Play(animationTransition, 0, 0f);
 	}
 }

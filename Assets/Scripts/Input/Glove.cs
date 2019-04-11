@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using System.Collections;
 
 /// <summary>
 /// Responsible for managing inputs and gameplay of the player's glove.
@@ -102,14 +103,24 @@ public class Glove : MonoBehaviour
 		if(isSteamVRPlayer)
 		{
 			Instantiate(Resources.Load<GameObject>("Effects/StarEffect"), transform.position, transform.rotation);
+            StartCoroutine(PunchVibration(0.25f, 3999));
 		}
 		audioSource.PlayOneShot(hitSound);
 	}
 
-	/// <summary>
-	/// Records the positional change since this was last called.
-	/// </summary>
-	private void CalculateDisplacement()
+    private IEnumerator PunchVibration(float length, float strength)
+    {
+        for (float i = 0; i < length; i += Time.deltaTime)
+        {
+            GetComponent<Hand>().TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, strength));
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Records the positional change since this was last called.
+    /// </summary>
+    private void CalculateDisplacement()
 	{
 		displacement = (lastPosition - gameObject.transform.position).magnitude / Time.deltaTime;
 		lastPosition = gameObject.transform.position;

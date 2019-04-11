@@ -20,7 +20,7 @@
     </MoveList>
 
     <MoveList listNum="4">
-      <Moves>RightJabTell,LeftJab,RightJabTell,RightJab</Moves>
+      <Moves>RightJabTell,RightJab,RightJabTell,RightJab</Moves>
       <Duration>1,1,1,1</Duration>
     </MoveList>
 
