@@ -16,11 +16,11 @@ MonoBehaviour:
   - name: Match Start
     trigger: 0
     songsToPlay:
-    - {fileID: 11400000, guid: 4297aca53bae5eb4ba295ed2bb61c343, type: 2}
+    - {fileID: 11400000, guid: e090e2442297ab94a8c2ebf787260ba3, type: 2}
   - name: Fighting
     trigger: 1
     songsToPlay:
-    - {fileID: 11400000, guid: 4297aca53bae5eb4ba295ed2bb61c343, type: 2}
+    - {fileID: 11400000, guid: 6c381c39cbcbc0a42a1eecaf10534f05, type: 2}
   - name: Final Round
     trigger: 2
     songsToPlay:

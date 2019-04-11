@@ -16,18 +16,10 @@ MonoBehaviour:
   description: He would rather not be fighting you.
   icon: {fileID: 21300000, guid: 1abdda10700b8dc4aa3d625377774baa, type: 3}
   getUpChance: 0.35
+  reviveDuration: 8
+  hitsRequiredToRevive: 4
   getUpHealthRecovered: 0.5
-  maxHealth: 25
+  maxHealth: 35
   hitThreshold: 0.8
-  hitAudioLines:
-  - audioClip: {fileID: 0}
-    playChance: 0
-  - audioClip: {fileID: 0}
-    playChance: 0
-  - audioClip: {fileID: 0}
-    playChance: 0
-  - audioClip: {fileID: 0}
-    playChance: 0
-  - audioClip: {fileID: 0}
-    playChance: 0
-  hitFailedAudioLines: []
+  goodHitSounds: []
+  failedHitSounds: []

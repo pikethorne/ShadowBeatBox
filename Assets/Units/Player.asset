@@ -19,7 +19,7 @@ MonoBehaviour:
   reviveDuration: 8
   hitsRequiredToRevive: 4
   getUpHealthRecovered: 0.5
-  maxHealth: 15
+  maxHealth: 30
   hitThreshold: 0
   goodHitSounds: []
   failedHitSounds: []
